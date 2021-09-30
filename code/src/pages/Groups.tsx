@@ -1,3 +1,5 @@
+import { Box } from "@mui/system";
+import { Typography } from '@mui/material';
 import React from "react"
 import { Bet, Group, Option, User, Wager } from "../interfaces";
 
@@ -25,12 +27,12 @@ const fakedMembers: User[] = [
 ]
 
 const fakedOptions: Option[] = [
-    {id: '123', name: 'Yes'},
-    {id: '234', name: 'No'}
+    { id: '123', name: 'Yes' },
+    { id: '234', name: 'No' }
 ];
 
 const fakedWagers: Wager[] = [
-    {id: '123', option: fakedOptions[0], amount: 20, user: fakedMembers[0]}
+    { id: '123', option: fakedOptions[0], amount: 20, user: fakedMembers[0] }
 ]
 
 const fakedBets: Bet[] = [
@@ -50,8 +52,24 @@ const fakedGroup: Group = {
     bets: fakedBets
 }
 
-export const Groups = (): React.FC => {
-    const fakedGroup = fakedGroup;
-    
-    return <></>;
+export const Groups: React.FC = () => {
+    const groups: Group[] = [fakedGroup];
+
+    return <>{
+        groups.map(g => {
+            return (
+                <Box key={g.id+'group'}
+                sx={{
+                    borderRadius: 3,
+                    border: '1px solid dimgray',
+                    padding: '1em'
+                }}>
+                    <Typography>{g.name}</Typography>
+                    <Typography>{g.members.length} Friends</Typography>
+                    <Typography>
+                        {g.bets.length} Bets</Typography>
+                </Box>
+                )
+        })
+    }</>;
 }

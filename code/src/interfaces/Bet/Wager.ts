@@ -1,4 +1,4 @@
-import { User,points, uuid  } from "../index";
+import { User,points, uuid, Option  } from "..";
 
 export interface Wager {
     id: uuid;
