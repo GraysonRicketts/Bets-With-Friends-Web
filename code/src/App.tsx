@@ -1,5 +1,8 @@
-import { Groups } from "./pages/Groups";
+import { Home } from "./pages/Home";
 import { Container } from '@mui/material';
+import { Route } from "react-router";
+import { Switch } from "react-router-dom";
+import { Group } from "./pages/Group";
 
 function App() {
   return (
@@ -8,7 +11,11 @@ function App() {
         paddingTop: '1em',
         paddingBottom: '1em'
       }}>
-        <Groups></Groups>
+        <Switch>
+
+        <Route path="/group/:id"><Group/></Route>
+        <Route exact path="/"><Home></Home></Route>
+        </Switch>
       </Container>
     </div>
   );
