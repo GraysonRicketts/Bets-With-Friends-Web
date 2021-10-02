@@ -1,30 +1,28 @@
-import { ButtonBase, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import React from "react"
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { ButtonRow } from '../components/ButtonRow';
 import { fakedGroup } from '../fakedData';
 import { Group } from "../interfaces";
 
 
 export const Home: React.FC = () => {
     const groups: Group[] = [fakedGroup];
+    const history = useHistory();
 
     return <>{
         groups.map(g => {
             return (
-                <Link to={`/group/${g.id}/bets`} key={`/group/${g.id}/bets`}>
-                <ButtonBase
-                    sx={{
-                        borderRadius: 3,
-                        border: '1px solid dimgray',
-                        padding: '1em',
-                        width: '100%',
-                        justifyContent: 'space-between'
-                    }}>
+                <ButtonRow
+                    onClick={() => {
+                        history.push(`/group/${g.id}/bets`);
+                    }}
+                    key={`/group/${g.id}/bets`}>
                     <Typography>{g.name}</Typography>
                     <Typography>{g.members.length} Friends</Typography>
                     <Typography>
                         {g.bets.length} Bets</Typography>
-                </ButtonBase></Link>
+                </ButtonRow>
             )
         })
     }</>;

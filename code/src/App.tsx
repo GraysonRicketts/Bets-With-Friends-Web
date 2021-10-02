@@ -6,18 +6,18 @@ import { Group } from "./pages/Group";
 
 function App() {
   return (
-    <div className="App">
-      <Container sx={{
-        paddingTop: '1em',
-        paddingBottom: '1em'
-      }}>
-        <Switch>
+    <Container sx={{
+      paddingTop: '1em',
+      paddingBottom: '1em',
+      width: '100%'
+    }} 
+    className="App">
+      <Switch>
 
-        <Route path="/group/:id"><Group/></Route>
+        <Route path="/group/:id"><Group /></Route>
         <Route exact path="/"><Home></Home></Route>
-        </Switch>
-      </Container>
-    </div>
+      </Switch>
+    </Container>
   );
 }
 

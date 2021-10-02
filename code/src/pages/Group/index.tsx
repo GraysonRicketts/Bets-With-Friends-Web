@@ -17,7 +17,7 @@ export const Group: React.FC = () => {
         <NavLink to={`${url}/categories`}>Categories</NavLink>
         <NavLink to={`${url}/score`}>Score</NavLink>
 
-        <Box sx={{ paddingTop: '1em'}}>
+        <Box sx={{ paddingTop: '1em', marginTop: '1em', borderTop: '1px solid lightgray'}}>
             <Switch>
                 <Route path={`${url}/bets`}><Bets bets={group.bets} /></Route>
                 <Route path={`${url}/categories`}>no</Route>
