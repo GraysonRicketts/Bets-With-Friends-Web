@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import React from "react"
 import { useHistory } from 'react-router-dom';
 import { ButtonRow } from '../components/ButtonRow';
-import { fakedGroup } from '../fakedData';
+import { fakedGroup } from '../app/fakedData';
 import { Group } from "../interfaces";
 
 

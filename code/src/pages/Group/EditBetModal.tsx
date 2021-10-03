@@ -1,6 +1,6 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material"
 import { useState } from "react";
-import { Bet } from "../../interfaces"
+import { Bet, Option } from "../../interfaces"
 
 interface Props {
     bet: Bet;
@@ -28,6 +28,7 @@ enum ModalProgress {
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
     const [betInput, setBetInput] = useState<number>(0);
     const [modalProgress, setModalProgress] = useState<ModalProgress>(ModalProgress.Edit);
+    const [seclectedOutcome, setSelectedOutcome] = useState<Option | undefined>(undefined);
 
     const EditPage = <>
         <Typography>{bet.title}</Typography>
@@ -63,6 +64,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         {bet.options.map(o => {
             return <Button variant="outlined" key={`select-option-button-${o.id}`} onClick={() => {
                 setModalProgress(ModalProgress.Confirm)
+                setSelectedOutcome(o);
             }}><Typography>{o.name}</Typography></Button>
         })}
     </>
