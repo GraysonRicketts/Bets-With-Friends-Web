@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { Redirect, Route, useParams, useRouteMatch } from 'react-router';
 import { NavLink, Switch } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { Bets } from './Bets';
 
 export const Group: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const { path, url } = useRouteMatch();
+    const { url } = useRouteMatch();
 
     const group = fakedGroup.id === id ? fakedGroup : null;
 

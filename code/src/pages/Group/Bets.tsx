@@ -1,4 +1,4 @@
-import { Button, IconButton, Modal, TextField, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
@@ -33,10 +33,6 @@ export const Bets: React.FC<Props> = ({ bets }) => {
     const groupedBets = groupByCategory(bets);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
-
-    const addBet = () => {
-        // TODO
-    }
 
     return <>{groupedBets.map(gb => {
         return <Box key={`gb_bets_${gb.category?.id}`} sx={{ marginBottom: '3em' }}>
