@@ -39,7 +39,7 @@ const footballCategory: Category = {
 export const fakedBets: Bet[] = [
     {
         id: '123',
-        title: 'Naggy is sacked',
+        title: 'Nagy is sacked',
         options: fakedOptions,
         isOpen: true,
         wagers: fakedWagers,
