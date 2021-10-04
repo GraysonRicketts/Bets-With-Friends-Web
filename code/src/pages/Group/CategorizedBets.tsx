@@ -16,6 +16,7 @@ interface GroupedBets {
     bets: Bet[];
 }
 
+// TODO: Add unit tests
 function groupByCategory(bets: Bet[]): GroupedBets[] {
     const groupedBets: GroupedBets[] = [];
 

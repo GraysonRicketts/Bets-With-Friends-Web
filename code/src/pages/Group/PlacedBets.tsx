@@ -17,6 +17,7 @@ interface GroupedBets {
     bets: Bet[];
 }
 
+// TODO: add unit tests
 function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
     const groupedBets: GroupedBets[] = [ { isPlaced: true, isOpen: true, bets: []}, {isPlaced: false, bets: []}, { isOpen: false, bets: []}];
 
