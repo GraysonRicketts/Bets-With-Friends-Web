@@ -52,6 +52,14 @@ export const fakedBets: Bet[] = [
         options: fakedOptions,
         isOpen: true,
         wagers: [fakedWagers[1]]
+    },
+    {
+        id: '345',
+        title: 'Katie rocks',
+        options: fakedOptions,
+        isOpen: false,
+        wagers: fakedWagers,
+        outcome: fakedOptions[0]
     }
 ]
 

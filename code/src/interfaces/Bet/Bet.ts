@@ -6,5 +6,6 @@ export interface Bet {
     options: Option[];
     isOpen: boolean;
     wagers: Wager[],
+    outcome?: Option;
     category?: Category;
 }

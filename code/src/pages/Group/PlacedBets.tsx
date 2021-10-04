@@ -2,7 +2,7 @@ import { IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
-import { Bet, Category, uuid } from "../../interfaces";
+import { Bet, uuid } from "../../interfaces";
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from "./EditBetModal";
 import { useSelector } from "react-redux";
@@ -12,12 +12,13 @@ interface Props {
     bets: Bet[]
 }
 interface GroupedBets {
-    isPlaced: boolean
+    isPlaced?: boolean;
+    isOpen?: boolean;
     bets: Bet[];
 }
 
 function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
-    const groupedBets: GroupedBets[] = [ { isPlaced: true, bets: []}, {isPlaced: false, bets: []}];
+    const groupedBets: GroupedBets[] = [ { isPlaced: true, isOpen: true, bets: []}, {isPlaced: false, bets: []}, { isOpen: false, bets: []}];
 
     bets.forEach((b) => {
         if (b.wagers.find(w => w.user.id === userId)) {
@@ -72,6 +73,22 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                     setEditBet(b)
                 }}
                     sx={wagerStyle}>
+                    <Typography>{b.title}</Typography>
+                </ButtonRow>
+            })}
+
+            <IconButton aria-label="add">
+                <AddIcon />
+            </IconButton>
+        </Box>
+
+        <Box>
+            <Typography>Closed</Typography>
+
+            {groupedBets.find(gb => !gb.isOpen)?.bets.map(b => {
+                return <ButtonRow onClick={() => {
+                    // TODO: view only edit
+                }}>
                     <Typography>{b.title}</Typography>
                 </ButtonRow>
             })}
