@@ -1,6 +1,5 @@
-import { IconButton, Typography } from "@mui/material";
-import { Box, typography } from "@mui/system";
-import React, { useState } from "react";
+import { Typography } from "@mui/material";
+import React from "react";
 import { Bet, User, Group, uuid, points } from "../../interfaces";
 
 interface Props {
