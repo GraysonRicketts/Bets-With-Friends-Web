@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
 import { Bet, Category, uuid } from "../../interfaces";
 import AddIcon from '@mui/icons-material/Add';
-import { EditBetModal } from "./EditBetModal";
+import { EditBetModal } from "./modals/EditBetModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { AddBetModal } from "./AddBetModal";
+import { AddBetModal } from "./modals/AddBetModal";
+import { ViewOnlyModal } from "./modals/ViewOnlyModal";
 
 interface Props {
     bets: Bet[]
@@ -20,13 +21,15 @@ interface GroupedBets {
 
 // TODO: add unit tests
 function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
-    const groupedBets: GroupedBets[] = [{ isPlaced: true, isOpen: true, bets: [] }, { isPlaced: false, bets: [] }, { isOpen: false, bets: [] }];
+    const groupedBets: GroupedBets[] = [{ isPlaced: true, isOpen: true, bets: [] }, { isPlaced: false, isOpen: true, bets: [] }, { isOpen: false, bets: [] }];
 
     bets.forEach((b) => {
-        if (b.wagers.find(w => w.user.id === userId)) {
+        if (!b.isOpen) {
+            groupedBets.find(gb => !gb.isOpen)?.bets.push(b);
+        } else if (b.wagers.find(w => w.user.id === userId)) {
             groupedBets.find(gb => gb.isPlaced)?.bets.push(b);
         } else {
-            groupedBets.find(gb => !gb.isPlaced)?.bets.push(b);
+            groupedBets.find(gb => !gb.isPlaced && gb.isOpen)?.bets.push(b);
         }
     })
 
@@ -38,7 +41,9 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
     const groupedBets = groupByPlacement(bets, userId);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
+    const [editBet, setEditBet] = useState<Bet | undefined>();
+    const [isViewOnlyModalOpen, setIsViewOnlyModalOpen] = useState(false);
+    const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
 
 
     return <><Box sx={{ marginBottom: '3em' }}>
@@ -90,7 +95,8 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
 
             {groupedBets.find(gb => !gb.isOpen)?.bets.map(b => {
                 return <ButtonRow onClick={() => {
-                    // TODO: view only edit
+                    setViewOnlyBet(b)
+                    setIsViewOnlyModalOpen(true)
                 }}>
                     <Typography>{b.title}</Typography>
                 </ButtonRow>
@@ -100,6 +106,8 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                 <AddIcon />
             </IconButton>
         </Box>
+
+        {viewOnlyBet && <ViewOnlyModal bet={viewOnlyBet} isOpen={isViewOnlyModalOpen} onClose={() => { setIsViewOnlyModalOpen(false) }} />}
         {editBet && <EditBetModal isOpen={isEditModalOpen} bet={editBet} onClose={() => { setIsEditModalOpen(false) }} />}
         <AddBetModal isOpen={isAddModalOpen} onClose={() => { setIsAddModalOpen(false) }} categories={
             bets.map(b => b.category)

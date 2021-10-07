@@ -1,25 +1,14 @@
-import { Box, Button, Modal, TextField, Typography } from "@mui/material"
+import { Box, Button, Modal, TextField, Typography, IconButton } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
-import { Bet, Option } from "../../interfaces"
+import { Bet, Option } from "../../../interfaces"
+import { modalStyle } from "./modalStyle";
 
 interface Props {
     bet: Bet;
     isOpen: boolean;
     onClose: () => void;
 }
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'white',
-    border: '1px solid lightgray',
-    borderRadius: 3,
-    boxShadow: 24,
-    p: 4,
-};
 
 enum ModalProgress {
     Edit, SelectOption, Confirm
@@ -55,6 +44,9 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         })}
 
         <Button onClick={() => { setModalProgress(ModalProgress.SelectOption) }}>Close bet</Button>
+        <IconButton aria-label="delete-bet" onClick={() => { }}>
+            <DeleteIcon />
+        </IconButton>
     </>
 
     const SelectOptionPage = <>
@@ -79,11 +71,11 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         setModalProgress(ModalProgress.Edit);
         onClose();
     }}>
-        <Box sx={style}>
+        <Box sx={modalStyle}>
             {
-                modalProgress === ModalProgress.Edit ? EditPage 
-                : modalProgress === ModalProgress.SelectOption ? SelectOptionPage 
-                : ConfirmPage
+                modalProgress === ModalProgress.Edit ? EditPage
+                    : modalProgress === ModalProgress.SelectOption ? SelectOptionPage
+                        : ConfirmPage
             }
         </Box>
     </Modal>

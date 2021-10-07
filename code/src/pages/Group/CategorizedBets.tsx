@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
 import { Bet, Category } from "../../interfaces";
 import AddIcon from '@mui/icons-material/Add';
-import { EditBetModal } from "./EditBetModal";
+import { EditBetModal } from "./modals/EditBetModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 

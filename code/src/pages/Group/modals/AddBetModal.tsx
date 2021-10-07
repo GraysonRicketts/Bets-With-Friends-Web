@@ -1,26 +1,14 @@
 import { Box, Button, Modal, TextField, IconButton, Typography, Select } from "@mui/material";
 import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { Category } from '../../interfaces'
+import { Category } from '../../../interfaces'
+import { modalStyle } from "./modalStyle";
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
     categories: Category[]
 }
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'white',
-    border: '1px solid lightgray',
-    borderRadius: 3,
-    boxShadow: 24,
-    p: 4,
-};
 
 export const AddBetModal: React.FC<Props> = ({ isOpen, onClose, categories }) => {
     const [title, setTitle] = useState<string>('');
@@ -40,7 +28,7 @@ export const AddBetModal: React.FC<Props> = ({ isOpen, onClose, categories }) =>
     return <Modal open={isOpen} onClose={() => {
         onClose();
     }}>
-        <Box sx={style}>
+        <Box sx={modalStyle}>
             <div>
                 <TextField
                     id="bet-title"
