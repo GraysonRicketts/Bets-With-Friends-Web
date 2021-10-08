@@ -19,19 +19,38 @@ enum ModalProgress {
 
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
     const userId = useSelector((state: RootState) => state.user.id)
-    const [betInput, setBetInput] = useState(0);
     const [modalProgress, setModalProgress] = useState<ModalProgress>(ModalProgress.Edit);
     const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
     const [wagerOption, setWagerOption] = useState<Option | undefined>();
-
+    
     // TODO: use responsiveness to fix this
     const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
-
+    
     const handleClose = () => {
         setSelectedOutcome(undefined);
         setBetInput(0)
         setModalProgress(ModalProgress.Edit);
         onClose();
+    }
+    
+    const [betInput, setBetInput] = useState(0);
+    const [isBetInputError, setIsBetInputError] = useState(false)
+    const handleBetInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        const input = event.target.value;
+        if (!input || !input.trim()) return;
+
+        try {
+            const newVal = parseInt(input.trim());
+            if (newVal < 0) {
+                setIsBetInputError(true);
+                return
+            }
+            setIsBetInputError(false)
+            setBetInput(parseInt(event.target.value))
+        } catch(err) {
+            setIsBetInputError(true);
+            return;
+        }
     }
 
     const EditPage = <>
@@ -50,13 +69,12 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             })}
                 <TextField
                     id="bet-input"
+                    error={isBetInputError}
                     label="Bet"
                     type="number"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     value={betInput}
-                    onChange={(event) => { setBetInput(parseInt(event.target.value)) }}
+                    onChange={handleBetInputChange}
                 />
                 <Button aria-label="add-wager" onClick={() => { 
                     // TODO: add modal to confirm wager
