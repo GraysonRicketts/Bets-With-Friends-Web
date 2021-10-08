@@ -23,7 +23,9 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
     const [modalProgress, setModalProgress] = useState<ModalProgress>(ModalProgress.Edit);
     const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
     const [wagerOption, setWagerOption] = useState<Option | undefined>();
-    const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(!bet.wagers.find(w => w.user.id === userId));
+
+    // TODO: use responsiveness to fix this
+    const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
 
     const handleClose = () => {
         setSelectedOutcome(undefined);
@@ -37,7 +39,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
 
         {bet.category && <Typography>Category: {bet.category.name}</Typography>}
 
-        {isWagerUnplaced &&
+        {isWagerUnplaced && !bet.wagers.find(w => w.user.id === userId) &&
             <> {bet.options.map(o => {
                 const variant = o.name === wagerOption?.name ? "contained" : "outlined";
                 return <Button variant={variant} key={`option-button-${o.id}`} onClick={() => {
@@ -58,7 +60,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
                 />
                 <Button aria-label="add-wager" onClick={() => { 
                     // TODO: add modal to confirm wager
-                    setIsWagerUnplaced(true) }
+                    setIsWagerUnplaced(false) }
                 }>
                     <Typography>Save wager</Typography><AddIcon  />
                 </Button>
