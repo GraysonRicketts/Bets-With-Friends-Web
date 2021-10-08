@@ -22,17 +22,21 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
     const [modalProgress, setModalProgress] = useState<ModalProgress>(ModalProgress.Edit);
     const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
     const [wagerOption, setWagerOption] = useState<Option | undefined>();
-    
+
+    const [isOptionUnchosenErr, setIsOptionUnchosenErr] = useState(false);
+
+    const [isWagerConfirmOpen, setIsWagerConfirmOpen] = useState(false);
+
     // TODO: use responsiveness to fix this
     const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
-    
+
     const handleClose = () => {
         setSelectedOutcome(undefined);
         setBetInput(0)
         setModalProgress(ModalProgress.Edit);
         onClose();
     }
-    
+
     const [betInput, setBetInput] = useState(0);
     const [isBetInputError, setIsBetInputError] = useState(false)
     const handleBetInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -47,11 +51,12 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             }
             setIsBetInputError(false)
             setBetInput(parseInt(event.target.value))
-        } catch(err) {
+        } catch (err) {
             setIsBetInputError(true);
             return;
         }
     }
+
 
     const EditPage = <>
         <Typography>{bet.title}</Typography>
@@ -62,6 +67,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             <> {bet.options.map(o => {
                 const variant = o.name === wagerOption?.name ? "contained" : "outlined";
                 return <Button variant={variant} key={`option-button-${o.id}`} onClick={() => {
+                    setIsOptionUnchosenErr(false);
                     setWagerOption(o);
                 }}>
                     <Typography>{o.name}</Typography>
@@ -76,12 +82,17 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
                     value={betInput}
                     onChange={handleBetInputChange}
                 />
-                <Button aria-label="add-wager" onClick={() => { 
-                    // TODO: add modal to confirm wager
-                    setIsWagerUnplaced(false) }
+                <Button aria-label="add-wager" onClick={() => {
+                    if (!wagerOption) {
+                        setIsOptionUnchosenErr(true)
+                        return;
+                    }
+                    setIsWagerConfirmOpen(true)
+                }
                 }>
-                    <Typography>Save wager</Typography><AddIcon  />
+                    <Typography>Save wager</Typography><AddIcon />
                 </Button>
+                {isOptionUnchosenErr && <Typography >Must choose an option</Typography>}
             </>
         }
 
@@ -116,13 +127,24 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         <Button variant="outlined">No</Button>
     </>
 
-    return <Modal open={isOpen} onClose={handleClose}>
-        <Box sx={modalStyle}>
-            {
-                modalProgress === ModalProgress.Edit ? EditPage
-                    : modalProgress === ModalProgress.SelectOption ? SelectOptionPage
-                        : ConfirmPage
-            }
-        </Box>
-    </Modal>
+    return <>
+        <Modal open={isOpen} onClose={handleClose}>
+            <Box sx={modalStyle}>
+                {
+                    modalProgress === ModalProgress.Edit ? EditPage
+                        : modalProgress === ModalProgress.SelectOption ? SelectOptionPage
+                            : ConfirmPage
+                }
+            </Box>
+        </Modal>
+        <Modal open={isWagerConfirmOpen} onClose={() => { setIsWagerConfirmOpen(false) }}><Box sx={modalStyle}>
+            <Typography>Are you sure you want to make this wager? This cannot be undone. {bet.title} - {wagerOption?.name} - {betInput}</Typography>
+
+            <Button variant="outlined" onClick={() => {
+                setIsWagerUnplaced(false)
+                setIsWagerConfirmOpen(false)
+            }}>Yes</Button>
+            <Button variant="outlined" onClick={() => { setIsWagerConfirmOpen(false) }}>No</Button>
+        </Box></Modal>
+    </>
 }
