@@ -1,6 +1,6 @@
-import { uuid } from "../types"
+import { uuid } from "../types";
 
 export interface Option {
-    id: uuid;
-    name: string;
+  id: uuid;
+  name: string;
 }

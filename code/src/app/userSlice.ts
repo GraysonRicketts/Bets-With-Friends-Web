@@ -1,18 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { fakedMembers } from './fakedData'
+import { createSlice } from "@reduxjs/toolkit";
+import { fakedMembers } from "./fakedData";
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: fakedMembers[0],
   reducers: {
-    login: (state) => {
-    },
-    logout: (state) => {
-    }
+    login: (state) => {},
+    logout: (state) => {},
   },
-})
+});
 
 // Action creators are generated for each case reducer function
 // export const { login, logout } = userSlice.actions
 
-export default userSlice.reducer
+export default userSlice.reducer;

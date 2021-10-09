@@ -1,6 +1,6 @@
 import { uuid } from "./index";
 
 export interface User {
-    id: uuid;
-    name: string;
+  id: uuid;
+  name: string;
 }
