@@ -2,11 +2,12 @@ import { IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
-import { Bet, Category } from "../../interfaces";
+import { Bet, Category, uuid } from "../../interfaces";
 import AddIcon from "@mui/icons-material/Add";
 import { EditBetModal } from "./modals/EditBetModal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { AddBetModal } from "./modals/AddBetModal";
 
 interface Props {
   bets: Bet[];
@@ -35,9 +36,26 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
   return groupedBets;
 }
 
+function getWagerStyle(bet: Bet, userId: uuid) {
+  if (!bet.isOpen) {
+    return { backgroundColor: "grey.400" } as const;
+  }
+
+  const isWagerPlaced = bet.wagers.find((w) => w.user.id === userId);
+  if (isWagerPlaced) {
+    return {} as const;
+  }
+
+  return {
+    backgroundColor: "primary.main",
+    color: "primary.contrastText",
+  } as const;
+}
+
 export const CategorizedBets: React.FC<Props> = ({ bets }) => {
   const categorizedBets = groupByCategory(bets);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
   const userId = useSelector((state: RootState) => state.user.id);
 
@@ -49,17 +67,13 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
             <Typography>{gb.category?.name || "Uncategorized"}</Typography>
 
             {gb.bets.map((b) => {
-              const isWagerPlaced = b.wagers.find((w) => w.user.id === userId);
-              const wagerStyle = isWagerPlaced && {
-                backgroundColor: "lightblue",
-              };
               return (
                 <ButtonRow
                   onClick={() => {
                     setIsEditModalOpen(true);
                     setEditBet(b);
                   }}
-                  sx={wagerStyle}
+                  sx={getWagerStyle(b, userId)}
                   key={`categorized_bet_title_${b.id}`}
                 >
                   <Typography>{b.title}</Typography>
@@ -67,7 +81,12 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
               );
             })}
 
-            <IconButton aria-label="add">
+            <IconButton
+              aria-label="add bet"
+              onClick={() => {
+                setIsAddModalOpen(true);
+              }}
+            >
               <AddIcon />
             </IconButton>
           </Box>
@@ -82,6 +101,18 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
           }}
         />
       )}
+      <AddBetModal
+        isOpen={isAddModalOpen}
+        onClose={() => {
+          setIsAddModalOpen(false);
+        }}
+        categories={bets
+          .map((b) => b.category)
+          .filter((c: Category | undefined): c is Category => {
+            return !!c;
+          })
+          .filter((v, i, pv) => pv.indexOf(v) === i)}
+      />
     </>
   );
 };

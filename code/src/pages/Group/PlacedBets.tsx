@@ -1,5 +1,5 @@
 import { IconButton, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import React, { useState } from "react";
 import { ButtonRow } from "../../components/ButtonRow";
 import { Bet, Category, uuid } from "../../interfaces";
@@ -52,22 +52,23 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
   return (
     <>
       <Box sx={{ marginBottom: "3em" }}>
-        <Typography>Unplaced</Typography>
+        <Typography variant="subtitle1">Unplaced</Typography>
 
         {groupedBets
           .find((gb) => !gb.isPlaced)
           ?.bets.map((b) => {
-            const isWagerPlaced = b.wagers.find((w) => w.user.id === userId);
-            const wagerStyle = isWagerPlaced && {
-              backgroundColor: "lightblue",
-            };
             return (
               <ButtonRow
                 onClick={() => {
                   setIsEditModalOpen(true);
                   setEditBet(b);
                 }}
-                sx={wagerStyle}
+                sx={
+                  {
+                    backgroundColor: "primary.main",
+                    color: "primary.contrastText"
+                  } as const
+                }
                 key={`bets_${b.id}`}
               >
                 <Typography>{b.title}</Typography>
@@ -86,22 +87,17 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
       </Box>
 
       <Box sx={{ marginBottom: "3em" }}>
-        <Typography>Pending</Typography>
+        <Typography variant="subtitle1">Pending</Typography>
 
         {groupedBets
           .find((gb) => gb.isPlaced)
           ?.bets.map((b) => {
-            const isWagerPlaced = b.wagers.find((w) => w.user.id === userId);
-            const wagerStyle = isWagerPlaced && {
-              backgroundColor: "lightblue",
-            };
             return (
               <ButtonRow
                 onClick={() => {
                   setIsEditModalOpen(true);
                   setEditBet(b);
                 }}
-                sx={wagerStyle}
               >
                 <Typography>{b.title}</Typography>
               </ButtonRow>
@@ -119,7 +115,7 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
       </Box>
 
       <Box>
-        <Typography>Closed</Typography>
+        <Typography variant="subtitle1">Closed</Typography>
 
         {groupedBets
           .find((gb) => !gb.isOpen)
@@ -130,20 +126,16 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                   setViewOnlyBet(b);
                   setIsViewOnlyModalOpen(true);
                 }}
+                sx={
+                  {
+                    backgroundColor: "grey.400"
+                  } as const
+                }
               >
                 <Typography>{b.title}</Typography>
               </ButtonRow>
             );
           })}
-
-        <IconButton
-          aria-label="add"
-          onClick={() => {
-            setIsAddModalOpen(true);
-          }}
-        >
-          <AddIcon />
-        </IconButton>
       </Box>
 
       {viewOnlyBet && (

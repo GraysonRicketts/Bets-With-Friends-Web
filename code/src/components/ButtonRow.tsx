@@ -15,6 +15,7 @@ export const ButtonRow: React.FC<Props> = ({ onClick, children, sx }) => {
         padding: "1em",
         width: "100%",
         justifyContent: "space-between",
+        marginBottom: '0.5em',
         ...sx,
       }}
       onClick={onClick}

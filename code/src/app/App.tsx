@@ -4,10 +4,13 @@ import { Route } from "react-router";
 import { Switch } from "react-router-dom";
 import { Group } from "../pages/Group";
 import { AppBar } from "./AppBar";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme();
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Container
         sx={{
           paddingTop: "1em",
@@ -26,7 +29,7 @@ function App() {
         </Switch>
       </Container>
       <AppBar />
-    </>
+    </ThemeProvider>
   );
 }
 
