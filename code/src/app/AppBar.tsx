@@ -2,6 +2,7 @@ import {
   Breadcrumbs,
   IconButton,
   Link,
+  LinkProps,
   Menu,
   MenuItem,
   Toolbar,
@@ -12,7 +13,15 @@ import { RootState } from "./store";
 import React, { useState } from "react";
 import { AppBar as MaterialAppBar } from "@mui/material";
 import { useSelector } from "react-redux";
-import { useLocation, Link as DomLink } from "react-router-dom";
+import { useLocation, Link as RouterLink } from "react-router-dom";
+
+interface LinkRouterProps extends LinkProps {
+  to: string;
+  replace?: boolean;
+}
+const LinkRouter = (props: LinkRouterProps) => (
+  <Link {...props} component={RouterLink as any} />
+);
 
 export const AppBar: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -36,14 +45,9 @@ export const AppBar: React.FC = () => {
           component="div"
           sx={{ flexGrow: 1 }}
         >
-          <DomLink
-            to="/"
-            component={() => (
-              <Link underline="hover" color="white" variant="h6">
-                Home
-              </Link>
-            )}
-          />
+          <LinkRouter underline="hover" color="white" variant="h6" to="/">
+            Home
+          </LinkRouter>
 
           {location.pathname.includes("group") && (
             <Typography color="white" variant="h6">
