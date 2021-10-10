@@ -36,18 +36,12 @@
     "start:dev": "react-scripts start --watch --debug",
     "style": "yarn prettier --check .",
     "style:fix": "yarn prettier --write .",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint --ext .ts,.tsx",
+    "lint:fix": "eslint -ext .ts,.tsx --fix",
     "format": "npm run lint:fix; npm run style:fix",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
