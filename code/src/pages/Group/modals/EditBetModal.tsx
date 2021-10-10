@@ -1,227 +1,150 @@
-import {
-  Box,
-  Button,
-  Modal,
-  TextField,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, Button, Modal, TextField, Typography, IconButton } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { Bet, Option } from "../../../interfaces";
+import { Bet, Option } from "../../../interfaces"
 import { modalStyle } from "./modalStyle";
 import { RootState } from "../../../app/store";
 
 interface Props {
-  bet: Bet;
-  isOpen: boolean;
-  onClose: () => void;
+    bet: Bet;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 enum ModalProgress {
-  Edit,
-  SelectOption,
-  Confirm,
+    Edit, SelectOption, Confirm
 }
 
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
-  const userId = useSelector((state: RootState) => state.user.id);
-  const [modalProgress, setModalProgress] = useState<ModalProgress>(
-    ModalProgress.Edit
-  );
-  const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
-  const [wagerOption, setWagerOption] = useState<Option | undefined>();
+    const userId = useSelector((state: RootState) => state.user.id)
+    const [modalProgress, setModalProgress] = useState<ModalProgress>(ModalProgress.Edit);
+    const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
+    const [wagerOption, setWagerOption] = useState<Option | undefined>();
 
-  const [isOptionUnchosenErr, setIsOptionUnchosenErr] = useState(false);
+    const [isOptionUnchosenErr, setIsOptionUnchosenErr] = useState(false);
 
-  const [isWagerConfirmOpen, setIsWagerConfirmOpen] = useState(false);
+    const [isWagerConfirmOpen, setIsWagerConfirmOpen] = useState(false);
 
-  // TODO: use responsiveness to fix this
-  const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
+    // TODO: use responsiveness to fix this
+    const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
 
-  const handleClose = () => {
-    setSelectedOutcome(undefined);
-    setBetInput(0);
-    setModalProgress(ModalProgress.Edit);
-    onClose();
-  };
-
-  const [betInput, setBetInput] = useState(0);
-  const [isBetInputError, setIsBetInputError] = useState(false);
-  const handleBetInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const input = event.target.value;
-    if (!input || !input.trim()) return;
-
-    try {
-      const newVal = parseInt(input.trim());
-      if (newVal < 0) {
-        setIsBetInputError(true);
-        return;
-      }
-      setIsBetInputError(false);
-      setBetInput(parseInt(event.target.value));
-    } catch (err) {
-      setIsBetInputError(true);
-      return;
+    const handleClose = () => {
+        setSelectedOutcome(undefined);
+        setBetInput(0)
+        setModalProgress(ModalProgress.Edit);
+        onClose();
     }
-  };
 
-  const EditPage = (
-    <>
-      <Typography>{bet.title}</Typography>
+    const [betInput, setBetInput] = useState(0);
+    const [isBetInputError, setIsBetInputError] = useState(false)
+    const handleBetInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        const input = event.target.value;
+        if (!input || !input.trim()) return;
 
-      {bet.category && <Typography>Category: {bet.category.name}</Typography>}
+        try {
+            const newVal = parseInt(input.trim());
+            if (newVal < 0) {
+                setIsBetInputError(true);
+                return
+            }
+            setIsBetInputError(false)
+            setBetInput(parseInt(event.target.value))
+        } catch (err) {
+            setIsBetInputError(true);
+            return;
+        }
+    }
 
-      {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === userId) && (
-        <>
-          {" "}
-          {bet.options.map((o) => {
-            const variant =
-              o.name === wagerOption?.name ? "contained" : "outlined";
-            return (
-              <Button
-                variant={variant}
-                key={`option-button-${o.id}`}
-                onClick={() => {
-                  setIsOptionUnchosenErr(false);
-                  setWagerOption(o);
-                }}
-              >
-                <Typography>{o.name}</Typography>
-              </Button>
-            );
-          })}
-          <TextField
-            id="bet-input"
-            error={isBetInputError}
-            label="Bet"
-            type="number"
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            value={betInput}
-            onChange={handleBetInputChange}
-          />
-          <Button
-            aria-label="add-wager"
-            onClick={() => {
-              if (!wagerOption) {
-                setIsOptionUnchosenErr(true);
-                return;
-              }
-              setIsWagerConfirmOpen(true);
-            }}
-          >
-            <Typography>Save wager</Typography>
-            <AddIcon />
-          </Button>
-          {isOptionUnchosenErr && (
-            <Typography>Must choose an option</Typography>
-          )}
-        </>
-      )}
 
-      {bet.wagers.map((w) => {
-        return (
-          <Typography key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}>
-            {w.user.name} - {w.option.name} - {w.amount}
-          </Typography>
-        );
-      })}
+    const EditPage = <>
+        <Typography>{bet.title}</Typography>
 
-      <Button
-        onClick={() => {
-          setModalProgress(ModalProgress.SelectOption);
-        }}
-      >
-        Close bet
-      </Button>
-      <IconButton aria-label="delete-bet" onClick={() => {}}>
-        <DeleteIcon />
-      </IconButton>
+        {bet.category && <Typography>Category: {bet.category.name}</Typography>}
+
+        {isWagerUnplaced && !bet.wagers.find(w => w.user.id === userId) &&
+            <> {bet.options.map(o => {
+                const variant = o.name === wagerOption?.name ? "contained" : "outlined";
+                return <Button variant={variant} key={`option-button-${o.id}`} onClick={() => {
+                    setIsOptionUnchosenErr(false);
+                    setWagerOption(o);
+                }}>
+                    <Typography>{o.name}</Typography>
+                </Button>
+            })}
+                <TextField
+                    id="bet-input"
+                    error={isBetInputError}
+                    label="Bet"
+                    type="number"
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                    value={betInput}
+                    onChange={handleBetInputChange}
+                />
+                <Button aria-label="add-wager" onClick={() => {
+                    if (!wagerOption) {
+                        setIsOptionUnchosenErr(true)
+                        return;
+                    }
+                    setIsWagerConfirmOpen(true)
+                }
+                }>
+                    <Typography>Save wager</Typography><AddIcon />
+                </Button>
+                {isOptionUnchosenErr && <Typography >Must choose an option</Typography>}
+            </>
+        }
+
+        {bet.wagers.map(w => {
+            return <Typography key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}>{w.user.name} - {w.option.name} - {w.amount}</Typography>
+        })}
+
+        <Button onClick={() => { setModalProgress(ModalProgress.SelectOption) }}>Close bet</Button>
+        <IconButton aria-label="delete-bet" onClick={() => { }}>
+            <DeleteIcon />
+        </IconButton>
     </>
-  );
 
-  const SelectOptionPage = (
-    <>
-      <Typography>What was the final outcome?</Typography>
+    const SelectOptionPage = <>
+        <Typography>What was the final outcome?</Typography>
 
-      <Typography>Bet: {bet.title}</Typography>
-      {bet.options.map((o) => {
-        const variant =
-          o.name === selectedOutcome?.name ? "contained" : "outlined";
-        return (
-          <Button
-            variant={variant}
-            key={`select-option-button-${o.id}`}
-            onClick={() => {
-              setModalProgress(ModalProgress.Confirm);
-              setSelectedOutcome(o);
-            }}
-          >
-            <Typography>{o.name}</Typography>
-          </Button>
-        );
-      })}
+        <Typography>Bet: {bet.title}</Typography>
+        {bet.options.map(o => {
+            const variant = o.name === selectedOutcome?.name ? "contained" : "outlined";
+            return <Button variant={variant} key={`select-option-button-${o.id}`} onClick={() => {
+                setModalProgress(ModalProgress.Confirm)
+                setSelectedOutcome(o);
+            }}><Typography>{o.name}</Typography></Button>
+        })}
     </>
-  );
 
-  const ConfirmPage = (
-    <>
-      <Typography>
-        Final outcome - {bet.title} - {selectedOutcome?.name}
-      </Typography>
+    const ConfirmPage = <>
+        <Typography>Final outcome - {bet.title} - {selectedOutcome?.name}</Typography>
 
-      <Typography>Close bet?</Typography>
-      <Button variant="outlined">Yes</Button>
-      <Button variant="outlined">No</Button>
+        <Typography>Close bet?</Typography>
+        <Button variant="outlined">Yes</Button>
+        <Button variant="outlined">No</Button>
     </>
-  );
 
-  return (
-    <>
-      <Modal open={isOpen} onClose={handleClose}>
-        <Box sx={modalStyle}>
-          {modalProgress === ModalProgress.Edit
-            ? EditPage
-            : modalProgress === ModalProgress.SelectOption
-            ? SelectOptionPage
-            : ConfirmPage}
-        </Box>
-      </Modal>
-      <Modal
-        open={isWagerConfirmOpen}
-        onClose={() => {
-          setIsWagerConfirmOpen(false);
-        }}
-      >
-        <Box sx={modalStyle}>
-          <Typography>
-            Are you sure you want to make this wager? This cannot be undone.{" "}
-            {bet.title} - {wagerOption?.name} - {betInput}
-          </Typography>
+    return <>
+        <Modal open={isOpen} onClose={handleClose}>
+            <Box sx={modalStyle}>
+                {
+                    modalProgress === ModalProgress.Edit ? EditPage
+                        : modalProgress === ModalProgress.SelectOption ? SelectOptionPage
+                            : ConfirmPage
+                }
+            </Box>
+        </Modal>
+        <Modal open={isWagerConfirmOpen} onClose={() => { setIsWagerConfirmOpen(false) }}><Box sx={modalStyle}>
+            <Typography>Are you sure you want to make this wager? This cannot be undone. {bet.title} - {wagerOption?.name} - {betInput}</Typography>
 
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setIsWagerUnplaced(false);
-              setIsWagerConfirmOpen(false);
-            }}
-          >
-            Yes
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setIsWagerConfirmOpen(false);
-            }}
-          >
-            No
-          </Button>
-        </Box>
-      </Modal>
+            <Button variant="outlined" onClick={() => {
+                setIsWagerUnplaced(false)
+                setIsWagerConfirmOpen(false)
+            }}>Yes</Button>
+            <Button variant="outlined" onClick={() => { setIsWagerConfirmOpen(false) }}>No</Button>
+        </Box></Modal>
     </>
-  );
-};
+}
