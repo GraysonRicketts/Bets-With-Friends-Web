@@ -60,6 +60,7 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
                     setEditBet(b);
                   }}
                   sx={wagerStyle}
+                  key={`categorized_bet_title_${b.id}`}
                 >
                   <Typography>{b.title}</Typography>
                 </ButtonRow>

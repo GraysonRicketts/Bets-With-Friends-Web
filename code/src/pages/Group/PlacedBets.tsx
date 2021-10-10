@@ -68,6 +68,7 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                   setEditBet(b);
                 }}
                 sx={wagerStyle}
+                key={`bets_${b.id}`}
               >
                 <Typography>{b.title}</Typography>
               </ButtonRow>

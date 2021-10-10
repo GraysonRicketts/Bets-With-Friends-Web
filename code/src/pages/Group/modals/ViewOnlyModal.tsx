@@ -1,26 +1,15 @@
 import {
   Box,
-  Button,
   Modal,
-  TextField,
-  Typography,
-  IconButton,
+  Typography
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
-import { Bet, Option } from "../../../interfaces";
+import { Bet } from "../../../interfaces";
 import { modalStyle } from "./modalStyle";
 
 interface Props {
   bet: Bet;
   isOpen: boolean;
   onClose: () => void;
-}
-
-enum ModalProgress {
-  Edit,
-  SelectOption,
-  Confirm,
 }
 
 export const ViewOnlyModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {

@@ -148,7 +148,7 @@ export const AddBetModal: React.FC<Props> = ({
             value={amount}
             onChange={(event) => {
               setIsAmountError(false);
-              setAmount(parseInt(event.target.value));
+              setAmount(parseInt(event.target.value))
             }}
           />
           <TextField
