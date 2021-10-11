@@ -17,13 +17,13 @@ export const ViewOnlyModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
       }}
     >
       <Box sx={modalStyle}>
-        <Typography>{bet.title}</Typography>
-
-        {bet.category && <Typography>Category: {bet.category.name}</Typography>}
+        <Typography variant="h6">{bet.title}</Typography>
+        {bet.category && <Typography variant="subtitle2">Category: {bet.category.name}</Typography>}
+        <Typography variant="subtitle2" sx={{ marginBottom: '1em'}}>Final outcome: {bet.outcome?.name}</Typography>
 
         {bet.wagers.map((w) => {
           return (
-            <Typography
+            <Typography variant="body1"
               key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}
             >
               {w.user.name} - {w.option.name} - {w.amount}

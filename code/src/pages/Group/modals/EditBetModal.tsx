@@ -5,6 +5,9 @@ import {
   TextField,
   Typography,
   IconButton,
+  FormControl,
+  InputLabel,
+  ButtonGroup,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -26,6 +29,10 @@ enum ModalProgress {
   Confirm,
 }
 
+const optionButtonStyle = {
+  marginRight: "0.5em",
+};
+
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   const userId = useSelector((state: RootState) => state.user.id);
   const [modalProgress, setModalProgress] = useState<ModalProgress>(
@@ -33,10 +40,9 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   );
   const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
   const [wagerOption, setWagerOption] = useState<Option | undefined>();
-
   const [isOptionUnchosenErr, setIsOptionUnchosenErr] = useState(false);
-
   const [isWagerConfirmOpen, setIsWagerConfirmOpen] = useState(false);
+  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
   // TODO: use responsiveness to fix this
   const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
@@ -72,73 +78,99 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
 
   const EditPage = (
     <>
-      <Typography>{bet.title}</Typography>
+      <Box sx={{ marginBottom: "1em" }}>
+        <Typography variant="h6">{bet.title}</Typography>
+        {bet.category && (
+          <Typography variant="subtitle2">
+            Category: {bet.category.name}
+          </Typography>
+        )}
+      </Box>
 
-      {bet.category && <Typography>Category: {bet.category.name}</Typography>}
-
-      {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === userId) && (
-        <>
-          {" "}
-          {bet.options.map((o) => {
-            const variant =
-              o.name === wagerOption?.name ? "contained" : "outlined";
-            return (
-              <Button
-                variant={variant}
-                key={`option-button-${o.id}`}
-                onClick={() => {
-                  setIsOptionUnchosenErr(false);
-                  setWagerOption(o);
+      <Box sx={{ marginBottom: "1em" }}>
+        {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === userId) && (
+          <FormControl sx={{ marginBottom: "1em", width: "100%" }}>
+            <ButtonGroup variant="outlined" aria-label="options button group">
+              {bet.options.map((o) => {
+                const variant =
+                  o.name === wagerOption?.name ? "contained" : "outlined";
+                return (
+                  <Button
+                    variant={variant}
+                    key={`option-button-${o.id}`}
+                    onClick={() => {
+                      setIsOptionUnchosenErr(false);
+                      setWagerOption(o);
+                    }}
+                    sx={{ marginBottom: "0.25em" }}
+                  >
+                    <Typography>{o.name}</Typography>
+                  </Button>
+                );
+              })}
+            </ButtonGroup>
+            <TextField
+              id="bet-input"
+              error={isBetInputError}
+              label="Bet"
+              type="number"
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              value={betInput}
+              onChange={handleBetInputChange}
+              sx={{ marginTop: "0.5em" }}
+            />
+            <Button
+              aria-label="add-wager"
+              onClick={() => {
+                if (!wagerOption) {
+                  setIsOptionUnchosenErr(true);
+                  return;
+                }
+                setIsWagerConfirmOpen(true);
+              }}
+            >
+              <Typography>Save wager</Typography>
+              <AddIcon />
+            </Button>
+            {isOptionUnchosenErr && (
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  backgroundColor: "error.main",
+                  color: "error.contrastText",
                 }}
               >
-                <Typography>{o.name}</Typography>
-              </Button>
-            );
-          })}
-          <TextField
-            id="bet-input"
-            error={isBetInputError}
-            label="Bet"
-            type="number"
-            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            value={betInput}
-            onChange={handleBetInputChange}
-          />
-          <Button
-            aria-label="add-wager"
-            onClick={() => {
-              if (!wagerOption) {
-                setIsOptionUnchosenErr(true);
-                return;
-              }
-              setIsWagerConfirmOpen(true);
-            }}
-          >
-            <Typography>Save wager</Typography>
-            <AddIcon />
-          </Button>
-          {isOptionUnchosenErr && (
-            <Typography>Must choose an option</Typography>
-          )}
-        </>
-      )}
-
-      {bet.wagers.map((w) => {
-        return (
-          <Typography key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}>
-            {w.user.name} - {w.option.name} - {w.amount}
-          </Typography>
-        );
-      })}
+                Must choose an option
+              </Typography>
+            )}
+          </FormControl>
+        )}
+        {bet.wagers.map((w) => {
+          return (
+            <Typography
+              key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}
+              variant="body1"
+            >
+              {w.user.name} - {w.option.name} - {w.amount}
+            </Typography>
+          );
+        })}
+      </Box>
 
       <Button
         onClick={() => {
           setModalProgress(ModalProgress.SelectOption);
         }}
+        variant="contained"
       >
         Close bet
       </Button>
-      <IconButton aria-label="delete-bet" onClick={() => {}}>
+      <IconButton
+        aria-label="delete-bet"
+        onClick={() => {
+          setIsConfirmDelete(true);
+        }}
+      >
         <DeleteIcon />
       </IconButton>
     </>
@@ -146,9 +178,11 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
 
   const SelectOptionPage = (
     <>
-      <Typography>What was the final outcome?</Typography>
+      <Typography variant="h6">What was the final outcome?</Typography>
+      <Typography variant="subtitle1" sx={{ marginBottom: "1em" }}>
+        Bet: {bet.title}
+      </Typography>
 
-      <Typography>Bet: {bet.title}</Typography>
       {bet.options.map((o) => {
         const variant =
           o.name === selectedOutcome?.name ? "contained" : "outlined";
@@ -160,6 +194,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
               setModalProgress(ModalProgress.Confirm);
               setSelectedOutcome(o);
             }}
+            sx={optionButtonStyle}
           >
             <Typography>{o.name}</Typography>
           </Button>
@@ -170,12 +205,14 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
 
   const ConfirmPage = (
     <>
-      <Typography>
+      <Typography variant="h6">Close bet?</Typography>
+      <Typography variant="subtitle1" sx={{ marginBottom: "1em" }}>
         Final outcome - {bet.title} - {selectedOutcome?.name}
       </Typography>
 
-      <Typography>Close bet?</Typography>
-      <Button variant="outlined">Yes</Button>
+      <Button variant="outlined" sx={optionButtonStyle}>
+        Yes
+      </Button>
       <Button variant="outlined">No</Button>
     </>
   );
@@ -198,9 +235,11 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         }}
       >
         <Box sx={modalStyle}>
-          <Typography>
-            Are you sure you want to make this wager? This cannot be undone.{" "}
+          <Typography variant="h6">
             {bet.title} - {wagerOption?.name} - {betInput}
+          </Typography>
+          <Typography variant="subtitle1">
+            Are you sure you want to make this wager?
           </Typography>
 
           <Button
@@ -208,7 +247,9 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             onClick={() => {
               setIsWagerUnplaced(false);
               setIsWagerConfirmOpen(false);
+              handleClose();
             }}
+            sx={optionButtonStyle}
           >
             Yes
           </Button>
@@ -216,6 +257,43 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             variant="outlined"
             onClick={() => {
               setIsWagerConfirmOpen(false);
+            }}
+          >
+            No
+          </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={isConfirmDelete}
+        onClose={() => {
+          setIsConfirmDelete(false);
+        }}
+      >
+        <Box sx={modalStyle}>
+          <Typography variant="h6">
+            Are you sure you want to delete this bet?
+          </Typography>
+          <Typography variant="body1" sx={{ marginBottom: "1em" }}>
+            This cannot be undone.
+          </Typography>
+
+          <Button
+            variant="outlined"
+            sx={{
+              backgroundColor: "error.main",
+              color: "error.contrastText",
+              marginRight: "1em",
+            }}
+            onClick={() => {
+              setIsConfirmDelete(false);
+            }}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setIsConfirmDelete(false);
             }}
           >
             No
