@@ -1,4 +1,4 @@
-import { Category, Option, uuid, Wager } from "..";
+import { Category, Option, uuid, Wager } from '..';
 
 export interface Bet {
   id: uuid;

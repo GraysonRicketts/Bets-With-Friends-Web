@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { fakedMembers } from "./fakedData";
+import { createSlice } from '@reduxjs/toolkit';
+import { fakedMembers } from './fakedData';
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: fakedMembers[0],
   reducers: {
     login: (state) => {},

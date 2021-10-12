@@ -1,6 +1,6 @@
-import { Typography } from "@mui/material";
-import React from "react";
-import { Bet, User, Group, uuid, points } from "../../interfaces";
+import { Typography } from '@mui/material';
+import React from 'react';
+import { Bet, User, Group, uuid, points } from '../../interfaces';
 
 interface Props {
   group: Group;
@@ -14,11 +14,11 @@ interface PooledWinner {
 // TODO: Add unit tests
 function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   const placedBets = bets.filter(
-    (b) => !b.isOpen && b.wagers.find((w) => w.user.id === userId)
+    (b) => !b.isOpen && b.wagers.find((w) => w.user.id === userId),
   );
   const wonBets = placedBets.filter(
     (b) =>
-      b.outcome?.id === b.wagers.find((w) => w.user.id === userId)?.option.id
+      b.outcome?.id === b.wagers.find((w) => w.user.id === userId)?.option.id,
   );
 
   // Calculate winning pool

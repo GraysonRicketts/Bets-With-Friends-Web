@@ -7,13 +7,13 @@ import {
   MenuItem,
   Toolbar,
   Typography,
-} from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { RootState } from "./store";
-import React, { useState } from "react";
-import { AppBar as MaterialAppBar } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useLocation, Link as RouterLink } from "react-router-dom";
+} from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { RootState } from './store';
+import React, { useState } from 'react';
+import { AppBar as MaterialAppBar } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
 
 interface LinkRouterProps extends LinkProps {
   to: string;
@@ -38,7 +38,7 @@ export const AppBar: React.FC = () => {
   };
 
   return (
-    <MaterialAppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
+    <MaterialAppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
       <Toolbar>
         <Breadcrumbs
           aria-label="breadcrumb"
@@ -49,7 +49,7 @@ export const AppBar: React.FC = () => {
             Home
           </LinkRouter>
 
-          {location.pathname.includes("group") && (
+          {location.pathname.includes('group') && (
             <Typography color="white" variant="h6">
               Groups
             </Typography>
@@ -70,13 +70,13 @@ export const AppBar: React.FC = () => {
             <Menu
               id="menu-appbar"
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
+                vertical: 'bottom',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
+                vertical: 'bottom',
+                horizontal: 'right',
               }}
               open={isProfileOpen}
               onClose={handleClose}

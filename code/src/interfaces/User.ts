@@ -1,4 +1,4 @@
-import { uuid } from "./index";
+import { uuid } from './index';
 
 export interface User {
   id: uuid;

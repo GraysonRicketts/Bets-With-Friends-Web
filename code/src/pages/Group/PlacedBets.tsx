@@ -1,14 +1,14 @@
-import { IconButton, Typography } from "@mui/material";
-import { Box } from "@mui/material";
-import React, { useState } from "react";
-import { ButtonRow } from "../../components/ButtonRow";
-import { Bet, Category, uuid } from "../../interfaces";
-import AddIcon from "@mui/icons-material/Add";
-import { EditBetModal } from "./modals/EditBetModal";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { AddBetModal } from "./modals/AddBetModal";
-import { ViewOnlyModal } from "./modals/ViewOnlyModal";
+import { IconButton, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import React, { useState } from 'react';
+import { ButtonRow } from '../../components/ButtonRow';
+import { Bet, Category, uuid } from '../../interfaces';
+import AddIcon from '@mui/icons-material/Add';
+import { EditBetModal } from './modals/EditBetModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { AddBetModal } from './modals/AddBetModal';
+import { ViewOnlyModal } from './modals/ViewOnlyModal';
 
 interface Props {
   bets: Bet[];
@@ -51,7 +51,7 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
 
   return (
     <>
-      <Box sx={{ marginBottom: "3em" }}>
+      <Box sx={{ marginBottom: '3em' }}>
         <Typography variant="subtitle1">Unplaced</Typography>
 
         {groupedBets
@@ -65,8 +65,8 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                 }}
                 sx={
                   {
-                    backgroundColor: "primary.main",
-                    color: "primary.contrastText"
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
                   } as const
                 }
                 key={`bets_${b.id}`}
@@ -86,7 +86,7 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
         </IconButton>
       </Box>
 
-      <Box sx={{ marginBottom: "3em" }}>
+      <Box sx={{ marginBottom: '3em' }}>
         <Typography variant="subtitle1">Pending</Typography>
 
         {groupedBets
@@ -128,7 +128,7 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
                 }}
                 sx={
                   {
-                    backgroundColor: "grey.400"
+                    backgroundColor: 'grey.400',
                   } as const
                 }
               >

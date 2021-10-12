@@ -9,11 +9,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from "@mui/material";
-import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
-import { Category } from "../../../interfaces";
-import { modalStyle } from "./modalStyle";
+} from '@mui/material';
+import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import { Category } from '../../../interfaces';
+import { modalStyle } from './modalStyle';
 
 interface Props {
   isOpen: boolean;
@@ -26,13 +26,13 @@ export const AddBetModal: React.FC<Props> = ({
   onClose,
   categories,
 }) => {
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  const [additionalOption, setAdditionalOption] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [additionalOption, setAdditionalOption] = useState<string>('');
   const [addedOptions, setAddedOptions] = useState<string[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategory, setNewCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>();
 
   const [isBetError, setIsBetError] = useState(false);
@@ -53,7 +53,7 @@ export const AddBetModal: React.FC<Props> = ({
       }}
     >
       <Box sx={modalStyle}>
-        <Typography variant="h5" sx={{ marginBottom: "1em" }}>
+        <Typography variant="h5" sx={{ marginBottom: '1em' }}>
           Add a bet
         </Typography>
         <div>
@@ -70,12 +70,18 @@ export const AddBetModal: React.FC<Props> = ({
               setIsBetError(false);
               setTitle(event.target.value.trim());
             }}
-            sx={{ width: "100%", marginBottom: "1em" }}
+            sx={{ width: '100%', marginBottom: '1em' }}
           />
           {}
 
           {categories.length && !showAddCategory && (
-            <Box sx={{marginBottom: '1em', display: 'flex', alignItems: 'center'}}>
+            <Box
+              sx={{
+                marginBottom: '1em',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-standard-label">
                   Category
@@ -87,7 +93,7 @@ export const AddBetModal: React.FC<Props> = ({
                   label="Category"
                   onChange={(e) => {
                     const category = categories.find(
-                      (c) => c.name === e.target.value
+                      (c) => c.name === e.target.value,
                     );
                     setSelectedCategory(category);
                   }}
@@ -122,7 +128,7 @@ export const AddBetModal: React.FC<Props> = ({
               onChange={(event) => {
                 setNewCategory(event.target.value.trim());
               }}
-              sx={{ marginBottom: "1em" }}
+              sx={{ marginBottom: '1em' }}
             />
           )}
 
@@ -139,7 +145,7 @@ export const AddBetModal: React.FC<Props> = ({
               setIsOptionError(false);
               setSelectedOption(event.target.value.trim());
             }}
-            sx={{ marginBottom: "1em" }}
+            sx={{ marginBottom: '1em' }}
           />
           <TextField
             id="bet-amount-input"
@@ -155,41 +161,41 @@ export const AddBetModal: React.FC<Props> = ({
               setIsAmountError(false);
               setAmount(parseInt(event.target.value));
             }}
-            sx={{ marginBottom: "1em" }}
+            sx={{ marginBottom: '1em' }}
           />
 
-          <Box sx={{display: 'flex', alignItems:'center'}}>
-          <TextField
-            id="bet-other-options"
-            label="Enter other outcomes here"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            error={isAddedOptionError}
-            required={!addedOptions.length}
-            value={additionalOption}
-            onChange={(event) => {
-              setAdditionalOption(event.target.value);
-            }}
-          />
-          <IconButton
-            aria-label="add"
-            onClick={() => {
-              if (!additionalOption) {
-                return;
-              }
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+              id="bet-other-options"
+              label="Enter other outcomes here"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={isAddedOptionError}
+              required={!addedOptions.length}
+              value={additionalOption}
+              onChange={(event) => {
+                setAdditionalOption(event.target.value);
+              }}
+            />
+            <IconButton
+              aria-label="add"
+              onClick={() => {
+                if (!additionalOption) {
+                  return;
+                }
 
-              setIsAddedOptionError(false);
-              setAddedOptions([...addedOptions, additionalOption]);
-              setAdditionalOption("");
-            }}
-          >
-            <AddIcon />
-          </IconButton>
+                setIsAddedOptionError(false);
+                setAddedOptions([...addedOptions, additionalOption]);
+                setAdditionalOption('');
+              }}
+            >
+              <AddIcon />
+            </IconButton>
           </Box>
 
           {!!addedOptions.length && (
-            <Box sx={{ marginBottom: "1em" }}>
+            <Box sx={{ marginBottom: '1em' }}>
               <Typography variant="caption">Additional outcomes</Typography>
               {addedOptions.map((ao) => (
                 <Typography>{ao}</Typography>

@@ -1,11 +1,11 @@
-import { Box, Tab, Tabs, Typography } from "@mui/material";
-import React from "react";
-import { Redirect, Route, useParams, useRouteMatch } from "react-router";
-import { Link as RouterLink, Switch } from "react-router-dom";
-import { fakedGroup } from "../../app/fakedData";
-import { CategorizedBets } from "./CategorizedBets";
-import { PlacedBets } from "./PlacedBets";
-import { ScoreScreen } from "./ScoreScreen";
+import { Box, Tab, Tabs, Typography } from '@mui/material';
+import React from 'react';
+import { Redirect, Route, useParams, useRouteMatch } from 'react-router';
+import { Link as RouterLink, Switch } from 'react-router-dom';
+import { fakedGroup } from '../../app/fakedData';
+import { CategorizedBets } from './CategorizedBets';
+import { PlacedBets } from './PlacedBets';
+import { ScoreScreen } from './ScoreScreen';
 
 export const Group: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,9 +16,9 @@ export const Group: React.FC = () => {
   // users, users/new, users/edit.
   // Then the order should be ['users/add', 'users/edit', 'users'].
   const routeMatch = useRouteMatch([
-    "/group/:id/bets",
-    "/group/:id/categories",
-    "/group/:id/score",
+    '/group/:id/bets',
+    '/group/:id/categories',
+    '/group/:id/score',
   ]);
   const currentTab = routeMatch?.path;
 
@@ -27,7 +27,7 @@ export const Group: React.FC = () => {
   return (
     group && (
       <>
-        <Typography variant="h6" sx={{ marginBottom: ".5em" }}>
+        <Typography variant="h6" sx={{ marginBottom: '.5em' }}>
           {group.name}
         </Typography>
 
@@ -54,8 +54,8 @@ export const Group: React.FC = () => {
 
         <Box
           sx={{
-            paddingTop: "1em",
-            marginTop: "1em"
+            paddingTop: '1em',
+            marginTop: '1em',
           }}
         >
           <Switch>

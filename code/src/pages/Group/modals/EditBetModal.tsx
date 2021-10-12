@@ -7,14 +7,14 @@ import {
   IconButton,
   FormControl,
   ButtonGroup,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { Bet, Option } from "../../../interfaces";
-import { modalStyle } from "./modalStyle";
-import { RootState } from "../../../app/store";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Bet, Option } from '../../../interfaces';
+import { modalStyle } from './modalStyle';
+import { RootState } from '../../../app/store';
 
 interface Props {
   bet: Bet;
@@ -29,13 +29,13 @@ enum ModalProgress {
 }
 
 const optionButtonStyle = {
-  marginRight: "0.5em",
+  marginRight: '0.5em',
 };
 
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   const userId = useSelector((state: RootState) => state.user.id);
   const [modalProgress, setModalProgress] = useState<ModalProgress>(
-    ModalProgress.Edit
+    ModalProgress.Edit,
   );
   const [selectedOutcome, setSelectedOutcome] = useState<Option | undefined>();
   const [wagerOption, setWagerOption] = useState<Option | undefined>();
@@ -56,7 +56,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   const [betInput, setBetInput] = useState(0);
   const [isBetInputError, setIsBetInputError] = useState(false);
   const handleBetInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const input = event.target.value;
     if (!input || !input.trim()) return;
@@ -77,7 +77,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
 
   const EditPage = (
     <>
-      <Box sx={{ marginBottom: "1em" }}>
+      <Box sx={{ marginBottom: '1em' }}>
         <Typography variant="h6">{bet.title}</Typography>
         {bet.category && (
           <Typography variant="subtitle2">
@@ -86,13 +86,13 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         )}
       </Box>
 
-      <Box sx={{ marginBottom: "1em" }}>
+      <Box sx={{ marginBottom: '1em' }}>
         {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === userId) && (
-          <FormControl sx={{ marginBottom: "1em", width: "100%" }}>
+          <FormControl sx={{ marginBottom: '1em', width: '100%' }}>
             <ButtonGroup variant="outlined" aria-label="options button group">
               {bet.options.map((o) => {
                 const variant =
-                  o.name === wagerOption?.name ? "contained" : "outlined";
+                  o.name === wagerOption?.name ? 'contained' : 'outlined';
                 return (
                   <Button
                     variant={variant}
@@ -101,7 +101,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
                       setIsOptionUnchosenErr(false);
                       setWagerOption(o);
                     }}
-                    sx={{ marginBottom: "0.25em" }}
+                    sx={{ marginBottom: '0.25em' }}
                   >
                     <Typography>{o.name}</Typography>
                   </Button>
@@ -113,10 +113,10 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
               error={isBetInputError}
               label="Bet"
               type="number"
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               value={betInput}
               onChange={handleBetInputChange}
-              sx={{ marginTop: "0.5em" }}
+              sx={{ marginTop: '0.5em' }}
             />
             <Button
               aria-label="add-wager"
@@ -135,8 +135,8 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
               <Typography
                 variant="subtitle2"
                 sx={{
-                  backgroundColor: "error.main",
-                  color: "error.contrastText",
+                  backgroundColor: 'error.main',
+                  color: 'error.contrastText',
                 }}
               >
                 Must choose an option
@@ -178,13 +178,13 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   const SelectOptionPage = (
     <>
       <Typography variant="h6">What was the final outcome?</Typography>
-      <Typography variant="subtitle1" sx={{ marginBottom: "1em" }}>
+      <Typography variant="subtitle1" sx={{ marginBottom: '1em' }}>
         Bet: {bet.title}
       </Typography>
 
       {bet.options.map((o) => {
         const variant =
-          o.name === selectedOutcome?.name ? "contained" : "outlined";
+          o.name === selectedOutcome?.name ? 'contained' : 'outlined';
         return (
           <Button
             variant={variant}
@@ -205,7 +205,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
   const ConfirmPage = (
     <>
       <Typography variant="h6">Close bet?</Typography>
-      <Typography variant="subtitle1" sx={{ marginBottom: "1em" }}>
+      <Typography variant="subtitle1" sx={{ marginBottom: '1em' }}>
         Final outcome - {bet.title} - {selectedOutcome?.name}
       </Typography>
 
@@ -272,16 +272,16 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
           <Typography variant="h6">
             Are you sure you want to delete this bet?
           </Typography>
-          <Typography variant="body1" sx={{ marginBottom: "1em" }}>
+          <Typography variant="body1" sx={{ marginBottom: '1em' }}>
             This cannot be undone.
           </Typography>
 
           <Button
             variant="outlined"
             sx={{
-              backgroundColor: "error.main",
-              color: "error.contrastText",
-              marginRight: "1em",
+              backgroundColor: 'error.main',
+              color: 'error.contrastText',
+              marginRight: '1em',
             }}
             onClick={() => {
               setIsConfirmDelete(false);

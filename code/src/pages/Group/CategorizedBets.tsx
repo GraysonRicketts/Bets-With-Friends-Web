@@ -1,13 +1,13 @@
-import { IconButton, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import React, { useState } from "react";
-import { ButtonRow } from "../../components/ButtonRow";
-import { Bet, Category, uuid } from "../../interfaces";
-import AddIcon from "@mui/icons-material/Add";
-import { EditBetModal } from "./modals/EditBetModal";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { AddBetModal } from "./modals/AddBetModal";
+import { IconButton, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useState } from 'react';
+import { ButtonRow } from '../../components/ButtonRow';
+import { Bet, Category, uuid } from '../../interfaces';
+import AddIcon from '@mui/icons-material/Add';
+import { EditBetModal } from './modals/EditBetModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { AddBetModal } from './modals/AddBetModal';
 
 interface Props {
   bets: Bet[];
@@ -24,7 +24,7 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
   bets.forEach((b) => {
     const categoryGroup = groupedBets.find(
       (gb) =>
-        (!gb.category && !b.category) || gb.category?.id === b.category?.id
+        (!gb.category && !b.category) || gb.category?.id === b.category?.id,
     );
     if (categoryGroup) {
       categoryGroup.bets.push(b);
@@ -38,7 +38,7 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
 
 function getWagerStyle(bet: Bet, userId: uuid) {
   if (!bet.isOpen) {
-    return { backgroundColor: "grey.400" } as const;
+    return { backgroundColor: 'grey.400' } as const;
   }
 
   const isWagerPlaced = bet.wagers.find((w) => w.user.id === userId);
@@ -47,8 +47,8 @@ function getWagerStyle(bet: Bet, userId: uuid) {
   }
 
   return {
-    backgroundColor: "primary.main",
-    color: "primary.contrastText",
+    backgroundColor: 'primary.main',
+    color: 'primary.contrastText',
   } as const;
 }
 
@@ -63,8 +63,8 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
     <>
       {categorizedBets.map((gb) => {
         return (
-          <Box key={`gb_bets_${gb.category?.id}`} sx={{ marginBottom: "3em" }}>
-            <Typography>{gb.category?.name || "Uncategorized"}</Typography>
+          <Box key={`gb_bets_${gb.category?.id}`} sx={{ marginBottom: '3em' }}>
+            <Typography>{gb.category?.name || 'Uncategorized'}</Typography>
 
             {gb.bets.map((b) => {
               return (
