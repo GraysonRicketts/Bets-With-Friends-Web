@@ -51,9 +51,9 @@ export const ScoreScreen: React.FC<Props> = ({ group }) => {
     });
   return (
     <>
-      <Typography>Overall score</Typography>
+      <Typography variant="h5">Overall score</Typography>
       {overallScores.map((os) => (
-        <Typography>
+        <Typography variant="body1">
           {os.user.name} - {os.overallScore}
         </Typography>
       ))}

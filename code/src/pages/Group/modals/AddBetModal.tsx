@@ -53,6 +53,9 @@ export const AddBetModal: React.FC<Props> = ({
       }}
     >
       <Box sx={modalStyle}>
+        <Typography variant="h5" sx={{ marginBottom: "1em" }}>
+          Add a bet
+        </Typography>
         <div>
           <TextField
             id="bet-title"
@@ -67,36 +70,35 @@ export const AddBetModal: React.FC<Props> = ({
               setIsBetError(false);
               setTitle(event.target.value.trim());
             }}
+            sx={{ width: "100%", marginBottom: "1em" }}
           />
           {}
 
           {categories.length && !showAddCategory && (
-            <FormControl variant="standard">
-              <InputLabel id="demo-simple-select-standard-label">
-                Category
-              </InputLabel>
-              <Select
-                labelId="select-category"
-                id="select-category"
-                value={selectedCategory?.name}
-                label="Category"
-                onChange={(e) => {
-                  const category = categories.find(
-                    (c) => c.name === e.target.value
-                  );
-                  setSelectedCategory(category);
-                }}
-              >
-                {categories.map((c) => (
-                  <MenuItem value={c.name} key={`category_id_${c.id}`}>
-                    {c.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-          {!showAddCategory && (
-            <>
+            <Box sx={{marginBottom: '1em', display: 'flex', alignItems: 'center'}}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-standard-label">
+                  Category
+                </InputLabel>
+                <Select
+                  labelId="select-category"
+                  id="select-category"
+                  value={selectedCategory?.name}
+                  label="Category"
+                  onChange={(e) => {
+                    const category = categories.find(
+                      (c) => c.name === e.target.value
+                    );
+                    setSelectedCategory(category);
+                  }}
+                >
+                  {categories.map((c) => (
+                    <MenuItem value={c.name} key={`category_id_${c.id}`}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <IconButton
                 aria-label="add category"
                 onClick={() => {
@@ -106,8 +108,9 @@ export const AddBetModal: React.FC<Props> = ({
                 <AddIcon />
                 <Typography>Add a category</Typography>
               </IconButton>
-            </>
+            </Box>
           )}
+
           {showAddCategory && (
             <TextField
               id="add-category"
@@ -119,12 +122,13 @@ export const AddBetModal: React.FC<Props> = ({
               onChange={(event) => {
                 setNewCategory(event.target.value.trim());
               }}
+              sx={{ marginBottom: "1em" }}
             />
           )}
 
           <TextField
             id="selected-option"
-            label="Enter your choice"
+            label="How do you think this will outcome?"
             error={isOptionError}
             InputLabelProps={{
               shrink: true,
@@ -135,6 +139,7 @@ export const AddBetModal: React.FC<Props> = ({
               setIsOptionError(false);
               setSelectedOption(event.target.value.trim());
             }}
+            sx={{ marginBottom: "1em" }}
           />
           <TextField
             id="bet-amount-input"
@@ -150,10 +155,13 @@ export const AddBetModal: React.FC<Props> = ({
               setIsAmountError(false);
               setAmount(parseInt(event.target.value));
             }}
+            sx={{ marginBottom: "1em" }}
           />
+
+          <Box sx={{display: 'flex', alignItems:'center'}}>
           <TextField
             id="bet-other-options"
-            label="Enter other options here"
+            label="Enter other outcomes here"
             InputLabelProps={{
               shrink: true,
             }}
@@ -178,9 +186,16 @@ export const AddBetModal: React.FC<Props> = ({
           >
             <AddIcon />
           </IconButton>
-          {addedOptions.map((ao) => (
-            <Typography>{ao}</Typography>
-          ))}
+          </Box>
+
+          {!!addedOptions.length && (
+            <Box sx={{ marginBottom: "1em" }}>
+              <Typography variant="caption">Additional outcomes</Typography>
+              {addedOptions.map((ao) => (
+                <Typography>{ao}</Typography>
+              ))}
+            </Box>
+          )}
         </div>
         <Button
           onClick={() => {

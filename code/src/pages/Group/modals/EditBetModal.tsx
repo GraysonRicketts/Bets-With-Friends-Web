@@ -6,7 +6,6 @@ import {
   Typography,
   IconButton,
   FormControl,
-  InputLabel,
   ButtonGroup,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
