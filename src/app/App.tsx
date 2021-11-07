@@ -6,12 +6,14 @@ import { Group } from '../pages/Authorized/Group';
 import { AppBar } from './AppBar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
+import CssBaseline from '@mui/material/CssBaseline'
 
 const theme = createTheme();
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Container
         sx={{
           paddingTop: '1em',

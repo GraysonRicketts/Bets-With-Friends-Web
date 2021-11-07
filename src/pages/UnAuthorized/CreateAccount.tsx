@@ -8,21 +8,23 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {useMutation} from 'react-query';
+import { createAccount } from '../../api/auth';
 
 interface State {
   email: string;
   password: string;
   secondPassword: string;
-  errs: ValidationErrors[];
+  errs: Set<ValidationErrors>;
   showPassword: boolean;
 }
 
 enum ValidationErrors {
-  EMAIL,
-  PASSWORD,
-  SECOND_PASSWORD,
+  PASSWORD_TYPE,
+  PASSWORD_MATCH
 }
 
 export const CreateAccount: React.FC = () => {
@@ -30,7 +32,7 @@ export const CreateAccount: React.FC = () => {
     email: '',
     password: '',
     secondPassword: '',
-    errs: [],
+    errs: new Set(),
     showPassword: false,
   });
 
@@ -52,14 +54,51 @@ export const CreateAccount: React.FC = () => {
     event.preventDefault();
   };
 
+  const { data: createdAccount, isLoading}  = useMutation(async () => {
+    await createAccount(values.email, values.password);
+    return {};
+  })
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const { password, secondPassword, errs } = values;
+
+    if (password !== secondPassword) {
+        errs.add(ValidationErrors.PASSWORD_MATCH)
+    }
+
+    if (password.length < 5) {
+        errs.add(ValidationErrors.PASSWORD_TYPE)
+    }
+
+    if (errs.size > 0) {
+        setValues({
+            ...values,
+            errs
+        })
+        return;
+    }
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+        <Typography component="h1" variant="h5" sx={{mt: 8}}>
+          Create account
+        </Typography>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          marginTop: 5 ,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        
+
+        <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="email">Email</InputLabel>
           <OutlinedInput
             id="email"
@@ -72,7 +111,7 @@ export const CreateAccount: React.FC = () => {
             fullWidth
           />
         </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+        <FormControl fullWidth variant="outlined" sx={{ mt: 1 }}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
             id="password"
@@ -96,7 +135,7 @@ export const CreateAccount: React.FC = () => {
             label="Password*"
           />
         </FormControl>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+        <FormControl  fullWidth variant="outlined" sx={{ mt: 1 }}>
           <InputLabel htmlFor="second-password">Re-enter password</InputLabel>
           <OutlinedInput
             id="second-password"
@@ -125,10 +164,15 @@ export const CreateAccount: React.FC = () => {
           type="submit"
           variant="contained"
           fullWidth
+          sx={{ mt: 3, mb: 2 }}
+          color="success"
+          disabled={isLoading}
         >
+            {/* TODO: Add loader */}
           Submit
         </Button>
       </Box>
     </Container>
   );
 };
+
