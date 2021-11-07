@@ -1,12 +1,12 @@
 import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import { ButtonRow } from '../../components/ButtonRow';
-import { Bet, Category, uuid } from '../../interfaces';
+import { ButtonRow } from '../../../components/ButtonRow';
+import { Bet, Category, uuid } from '../../../interfaces';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
+import { RootState } from '../../../app/store';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
 

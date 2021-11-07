@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { ButtonRow } from '../components/ButtonRow';
-import { fakedGroup } from '../app/fakedData';
-import { Group } from '../interfaces';
+import { ButtonRow } from '../../components/ButtonRow';
+import { fakedGroup } from '../../app/fakedData';
+import { Group } from '../../interfaces';
 
 export const Home: React.FC = () => {
   const groups: Group[] = [fakedGroup];

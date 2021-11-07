@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from '@mui/material';
-import { Bet } from '../../../interfaces';
+import { Bet } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
 
 interface Props {

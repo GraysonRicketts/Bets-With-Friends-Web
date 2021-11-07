@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { Category } from '../../../interfaces';
+import { Category } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
 
 interface Props {

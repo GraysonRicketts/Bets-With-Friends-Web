@@ -2,7 +2,7 @@ import { Box, Tab, Tabs, Typography } from '@mui/material';
 import React from 'react';
 import { Redirect, Route, useParams, useRouteMatch } from 'react-router';
 import { Link as RouterLink, Switch } from 'react-router-dom';
-import { fakedGroup } from '../../app/fakedData';
+import { fakedGroup } from '../../../app/fakedData';
 import { CategorizedBets } from './CategorizedBets';
 import { PlacedBets } from './PlacedBets';
 import { ScoreScreen } from './ScoreScreen';

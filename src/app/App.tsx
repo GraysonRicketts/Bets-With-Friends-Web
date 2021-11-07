@@ -1,10 +1,11 @@
-import { Home } from '../pages/Home';
+import { Home } from '../pages/Authorized/Home';
 import { Container } from '@mui/material';
 import { Route } from 'react-router';
 import { Switch } from 'react-router-dom';
-import { Group } from '../pages/Group';
+import { Group } from '../pages/Authorized/Group';
 import { AppBar } from './AppBar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
 
 const theme = createTheme();
 
@@ -20,11 +21,14 @@ function App() {
         className="App"
       >
         <Switch>
+          <Route path="/create-account">
+            <CreateAccount />
+            </Route>
           <Route path="/group/:id">
             <Group />
           </Route>
           <Route exact path="/">
-            <Home></Home>
+            <Home />
           </Route>
         </Switch>
       </Container>

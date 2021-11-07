@@ -12,9 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { Bet, Option } from '../../../interfaces';
+import { Bet, Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
-import { RootState } from '../../../app/store';
+import { RootState } from '../../../../app/store';
 
 interface Props {
   bet: Bet;
