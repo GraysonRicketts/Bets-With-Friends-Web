@@ -1,10 +1,20 @@
 import { httpInstance  } from "./http";
 
-export async function createAccount(email: string, password: string) {
+interface CreateRes {
+    token: string;
+    displayName: string;
+}
 
-    const ret = await httpInstance.post('/create-account', {
-        email, password
+interface CreateUserDto {
+    displayName: string;
+    email: string;
+    password: string;
+}
+
+export async function createAccount(email: string, username: string , password: string) {
+    const res = await httpInstance.post<CreateUserDto, CreateRes>('auth/create', {
+        email, displayName: username, password
     });
 
-    return !!ret;
+    return res;
 }

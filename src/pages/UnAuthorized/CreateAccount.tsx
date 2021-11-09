@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
-  Button,
   Container,
   FormControl,
   IconButton,
@@ -9,13 +8,18 @@ import {
   InputLabel,
   OutlinedInput,
   Typography,
+  FormHelperText
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {useMutation} from 'react-query';
 import { createAccount } from '../../api/auth';
+import {LoadingButton} from '@mui/lab';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../app/auth';
 
 interface State {
   email: string;
+  username: string;
   password: string;
   secondPassword: string;
   errs: Set<ValidationErrors>;
@@ -28,17 +32,25 @@ enum ValidationErrors {
 }
 
 export const CreateAccount: React.FC = () => {
-  const [values, setValues] = React.useState<State>({
+  const [values, setValues] = useState<State>({
     email: '',
     password: '',
+    username: '',
     secondPassword: '',
     errs: new Set(),
     showPassword: false,
   });
 
+  const history = useHistory();
+  const auth = useAuth();
+
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
+      if (prop === 'password' && values.errs.size > 0) {
+        values.errs = new Set();
+      }
+
+      setValues({ ...values, [prop]: event.target.value, errs: values.errs });
     };
 
   const handleClickShowPassword = () => {
@@ -54,9 +66,13 @@ export const CreateAccount: React.FC = () => {
     event.preventDefault();
   };
 
-  const { data: createdAccount, isLoading}  = useMutation(async () => {
-    await createAccount(values.email, values.password);
-    return {};
+  const { mutate: submit, isLoading} = useMutation(async () => {
+    const { token, displayName } = await createAccount(values.email, values.username,values.password);
+
+    auth.signIn(displayName, token);
+    
+    // Redirect to group page
+    history.replace('/');
   })
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,8 +95,12 @@ export const CreateAccount: React.FC = () => {
         })
         return;
     }
+
+    submit();
   };
 
+  const isPswrdMisMatch = values.errs.has(ValidationErrors.PASSWORD_MATCH)
+  const isPswrdMisFormat = values.errs.has(ValidationErrors.PASSWORD_TYPE)
   return (
     <Container component="main" maxWidth="xs">
         <Typography component="h1" variant="h5" sx={{mt: 8}}>
@@ -111,6 +131,18 @@ export const CreateAccount: React.FC = () => {
             fullWidth
           />
         </FormControl>
+        <FormControl fullWidth variant="outlined" sx={{mt: 1}}>
+          <InputLabel htmlFor="email">Username</InputLabel>
+          <OutlinedInput
+            id="username"
+            type="text"
+            value={values.username}
+            onChange={handleChange('username')}
+            required
+            label="username*"
+            fullWidth
+          />
+        </FormControl>
         <FormControl fullWidth variant="outlined" sx={{ mt: 1 }}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
@@ -130,10 +162,12 @@ export const CreateAccount: React.FC = () => {
                 </IconButton>
               </InputAdornment>
             }
+            error={isPswrdMisFormat || isPswrdMisMatch}
             required
             fullWidth
             label="Password*"
           />
+          {isPswrdMisFormat && <FormHelperText id="bad-format-error-text">Password must be at least 5 characters long</FormHelperText>}
         </FormControl>
         <FormControl  fullWidth variant="outlined" sx={{ mt: 1 }}>
           <InputLabel htmlFor="second-password">Re-enter password</InputLabel>
@@ -155,22 +189,25 @@ export const CreateAccount: React.FC = () => {
               </InputAdornment>
             }
             required
+            error={isPswrdMisMatch}
             fullWidth
             label="Re-enter password*"
           />
+          {isPswrdMisMatch && <FormHelperText id="mismatch-error-text">Passwords do not match</FormHelperText>}
         </FormControl>
 
-        <Button
+        <LoadingButton
           type="submit"
           variant="contained"
           fullWidth
           sx={{ mt: 3, mb: 2 }}
           color="success"
           disabled={isLoading}
+          loading={isLoading}
         >
             {/* TODO: Add loader */}
           Submit
-        </Button>
+        </LoadingButton>
       </Box>
     </Container>
   );

@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
 
 export const httpInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: 'api/v1'
 });
-axios.defaults.headers.post['Content-Type'] =
-  'application/x-www-form-urlencoded';
+axios.defaults.headers.common['Content-Type'] =
+  'application/json';
+  axios.defaults.headers.common['Accept'] =
+  'application/json';
 httpInstance.defaults.timeout = 30000;
