@@ -65,8 +65,8 @@ export const Login: React.FC = () => {
 
     auth.signIn(displayName, token);
     
-    // Redirect to group page
-    navigate('/');
+    // Redirect to page the user was on
+    navigate(-1);
   })
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

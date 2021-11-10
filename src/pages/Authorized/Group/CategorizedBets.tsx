@@ -9,9 +9,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { AddBetModal } from './modals/AddBetModal';
 
-interface Props {
-  bets: Bet[];
-}
 interface GroupedBets {
   category: Category | undefined;
   bets: Bet[];
@@ -52,8 +49,8 @@ function getWagerStyle(bet: Bet, userId: uuid) {
   } as const;
 }
 
-export const CategorizedBets: React.FC<Props> = ({ bets }) => {
-  const categorizedBets = groupByCategory(bets);
+export const CategorizedBets: React.FC = () => {
+  const categorizedBets = groupByCategory([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
@@ -101,7 +98,7 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
           }}
         />
       )}
-      <AddBetModal
+      {/* <AddBetModal
         isOpen={isAddModalOpen}
         onClose={() => {
           setIsAddModalOpen(false);
@@ -112,7 +109,7 @@ export const CategorizedBets: React.FC<Props> = ({ bets }) => {
             return !!c;
           })
           .filter((v, i, pv) => pv.indexOf(v) === i)}
-      />
+      /> */}
     </>
   );
 };

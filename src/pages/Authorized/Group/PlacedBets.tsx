@@ -10,9 +10,6 @@ import { RootState } from '../../../app/store';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
 
-interface Props {
-  bets: Bet[];
-}
 interface GroupedBets {
   isPlaced?: boolean;
   isOpen?: boolean;
@@ -40,9 +37,9 @@ function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
   return groupedBets;
 }
 
-export const PlacedBets: React.FC<Props> = ({ bets }) => {
+export const PlacedBets: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.id);
-  const groupedBets = groupByPlacement(bets, userId);
+  const groupedBets = groupByPlacement([], userId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
@@ -156,18 +153,18 @@ export const PlacedBets: React.FC<Props> = ({ bets }) => {
           }}
         />
       )}
-      <AddBetModal
+      {/* <AddBetModal
         isOpen={isAddModalOpen}
         onClose={() => {
           setIsAddModalOpen(false);
         }}
-        categories={bets
+        categories={[]
           .map((b) => b.category)
           .filter((c: Category | undefined): c is Category => {
             return !!c;
           })
           .filter((v, i, pv) => pv.indexOf(v) === i)}
-      />
+      /> */}
     </>
   );
 };

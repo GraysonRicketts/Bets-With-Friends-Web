@@ -6,9 +6,12 @@ import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ProvideAuth, useAuth } from './auth';
-import { Group } from '../pages/Authorized/Group';
+import { Groups } from '../pages/Authorized/Group';
 import { Home } from '../pages/Authorized/Home';
 import { Login } from '../pages/UnAuthorized/Login';
+import { PlacedBets } from '../pages/Authorized/Group/PlacedBets';
+import { CategorizedBets } from '../pages/Authorized/Group/CategorizedBets';
+import { ScoreScreen } from '../pages/Authorized/Group/ScoreScreen';
 
 const theme = createTheme();
 const queryClient = new QueryClient();
@@ -31,8 +34,13 @@ function App() {
               <Route path="/create-account" element={<CreateAccount />} />
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<AuthorizedApp />}>
-                <Route path="group/:id" element={<Group />} />
-                <Route path="/" element={<Home />} />
+                <Route path="group/:id" element={<Groups />}>
+                  <Route index element={<>group page</>} />
+                  <Route path="bets" element={<PlacedBets />} />
+                  <Route path="categories" element={<CategorizedBets />} />
+                  <Route path="score" element={<ScoreScreen />} />
+                </Route>
+                <Route index element={<Home />} />
               </Route>
 
               <Route
@@ -65,7 +73,6 @@ const AuthorizedApp = () => {
 function RequireAuth({ children }: { children: JSX.Element }) {
   let auth = useAuth();
   let location = useLocation();
-  console.info(auth.user);
 
   if (!auth.user) {
     // Redirect them to the /login page, but save the current location they were

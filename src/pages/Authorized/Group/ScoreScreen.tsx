@@ -2,9 +2,6 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import { Bet, User, Group, uuid, points } from '../../../interfaces';
 
-interface Props {
-  group: Group;
-}
 
 interface PooledWinner {
   winners: User[];
@@ -40,23 +37,23 @@ function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   return winnings.reduce((pv, cv) => pv + cv, 0);
 }
 
-export const ScoreScreen: React.FC<Props> = ({ group }) => {
-  const overallScores: { user: User; overallScore: points }[] =
-    group.members.map((user) => {
-      const overallScore = calculateOverallUserScore(user.id, group.bets);
-      return {
-        user,
-        overallScore,
-      };
-    });
+export const ScoreScreen: React.FC = () => {
+  // const overallScores: { user: User; overallScore: points }[] =
+  //   group.members.map((user) => {
+  //     const overallScore = calculateOverallUserScore(user.id, group.bets);
+  //     return {
+  //       user,
+  //       overallScore,
+  //     };
+  //   });
   return (
     <>
-      <Typography variant="h5">Overall score</Typography>
+      {/* <Typography variant="h5">Overall score</Typography>
       {overallScores.map((os) => (
         <Typography variant="body1">
           {os.user.name} - {os.overallScore}
         </Typography>
-      ))}
+      ))} */}
     </>
   );
 };
