@@ -6,15 +6,12 @@ interface User {
 }
 
 export interface AuthContext {
-  user: User;
+  user?: User;
   signIn: (displayName: string, token: string) => void;
   signOut: () => void;
 }
 
 const authContext = React.createContext<AuthContext>({
-  user: {
-    displayName: ''
-  },
   signIn: () => {},
   signOut: () => {}
 });
@@ -25,9 +22,7 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth(): AuthContext {
-  const [user, setUser] = useState<User>({
-    displayName: ''
-  });
+  const [user, setUser] = useState<User | undefined>();
   
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
@@ -39,9 +34,7 @@ function useProvideAuth(): AuthContext {
   };
   const signOut = () => {
     httpInstance.defaults.headers.common['Authorization'] = '';
-    setUser({
-      displayName: ''
-    })
+    setUser(undefined)
   };
 
   // Return the user object and auth methods

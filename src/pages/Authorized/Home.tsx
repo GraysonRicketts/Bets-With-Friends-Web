@@ -1,13 +1,13 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ButtonRow } from '../../components/ButtonRow';
 import { fakedGroup } from '../../app/fakedData';
 import { Group } from '../../interfaces';
 
 export const Home: React.FC = () => {
   const groups: Group[] = [fakedGroup];
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -15,7 +15,7 @@ export const Home: React.FC = () => {
         return (
           <ButtonRow
             onClick={() => {
-              history.push(`/group/${g.id}/bets`);
+              navigate(`/group/${g.id}/bets`);
             }}
             key={`/group/${g.id}/bets`}
           >
