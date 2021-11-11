@@ -61,9 +61,9 @@ export const Login: React.FC = () => {
   };
 
   const { mutate: submit, isLoading} = useMutation(async () => {
-    const { token, displayName } = await login(values.email, values.password);
+    const { id, accessToken, displayName } = await login(values.email, values.password);
 
-    auth.signIn(displayName, token);
+    auth.signIn(id, displayName, accessToken);
     
     // Redirect to page the user was on
     navigate(-1);
@@ -88,7 +88,7 @@ export const Login: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
         <Typography component="h1" variant="h5" sx={{mt: 8}}>
-          Create account
+          Login
         </Typography>
       <Box
         component="form"

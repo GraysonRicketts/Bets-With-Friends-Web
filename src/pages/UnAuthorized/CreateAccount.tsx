@@ -67,9 +67,9 @@ export const CreateAccount: React.FC = () => {
   };
 
   const { mutate: submit, isLoading} = useMutation(async () => {
-    const { token, displayName } = await createAccount(values.email, values.username,values.password);
+    const { id, accessToken, displayName } = await createAccount(values.email, values.username,values.password);
 
-    auth.signIn(displayName, token);
+    auth.signIn(id, displayName, accessToken);
     
     // Redirect to group page
     navigate('/', { replace: true });

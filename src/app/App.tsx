@@ -1,5 +1,5 @@
 import { Container } from '@mui/material';
-import { Routes, Navigate, Route, useLocation, Outlet } from 'react-router-dom';
+import { Routes, Navigate, Route, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { AppBar } from './AppBar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
@@ -12,13 +12,27 @@ import { Login } from '../pages/UnAuthorized/Login';
 import { PlacedBets } from '../pages/Authorized/Group/PlacedBets';
 import { CategorizedBets } from '../pages/Authorized/Group/CategorizedBets';
 import { ScoreScreen } from '../pages/Authorized/Group/ScoreScreen';
+import { httpInstance } from '../api/http';
+import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 const theme = createTheme();
 const queryClient = new QueryClient();
 
+function ErrorFallback(props: FallbackProps) {
+  const { error }= props;
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{color: 'red'}}>{error.message}</pre>
+    </div>
+  )
+}
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
         <ProvideAuth>
           <CssBaseline />
@@ -54,7 +68,9 @@ function App() {
             </Routes>
           </Container>
         </ProvideAuth>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }
@@ -71,8 +87,21 @@ const AuthorizedApp = () => {
 };
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  let auth = useAuth();
-  let location = useLocation();
+  const auth = useAuth();
+  const navigate = useNavigate()
+  const location = useLocation();
+
+  httpInstance.interceptors.response.use((v) => v, (err) => {
+    const {status} = err.response;
+
+    // If unauthorized logout and redirect to login page
+    if (status === 401) {
+      auth.signOut();
+    }
+    navigate('/login', { state: { from: location }})
+
+    return Promise.reject(err);
+  })
 
   if (!auth.user) {
     // Redirect them to the /login page, but save the current location they were
