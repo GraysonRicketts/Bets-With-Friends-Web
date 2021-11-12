@@ -149,7 +149,6 @@ export const Login: React.FC = () => {
           disabled={isLoading}
           loading={isLoading}
         >
-            {/* TODO: Add loader */}
           Submit
         </LoadingButton>
       </Box>

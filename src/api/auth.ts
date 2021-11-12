@@ -29,18 +29,10 @@ interface CreateUserDto {
 }
 
 export async function createAccount(email: string, username: string , password: string) {
-    const res = await httpInstance.post<CreateUserDto, LoginRes>('auth/create', {
+    const res = await httpInstance.post<CreateUserDto, AxiosResponse<LoginRes>>('auth/create', {
         email, displayName: username, password
     });
 
-    return res;
-}
-
-export async function updateToken(refreshToken: string) {
-    const res = await httpInstance.post<string, AuthTokens>('auth/update-token',
-        refreshToken
-    );
-
-    return res;
+    return res.data;
 }
 

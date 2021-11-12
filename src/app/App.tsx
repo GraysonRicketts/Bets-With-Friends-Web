@@ -15,6 +15,7 @@ import { ScoreScreen } from '../pages/Authorized/Group/ScoreScreen';
 import { httpInstance } from '../api/http';
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { Friends } from '../pages/Authorized/Friends';
 
 const theme = createTheme();
 const queryClient = new QueryClient();
@@ -45,8 +46,8 @@ function App() {
             className="App"
           >
             <Routes>
-              <Route path="/create-account" element={<CreateAccount />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="create-account" element={<CreateAccount />} />
+              <Route path="login" element={<Login />} />
               <Route path="/" element={<AuthorizedApp />}>
                 <Route path="group/:id" element={<Groups />}>
                   <Route index element={<>group page</>} />
@@ -54,6 +55,7 @@ function App() {
                   <Route path="categories" element={<CategorizedBets />} />
                   <Route path="score" element={<ScoreScreen />} />
                 </Route>
+                <Route path="friends" element={<Friends />}/>
                 <Route index element={<Home />} />
               </Route>
 

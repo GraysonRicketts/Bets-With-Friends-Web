@@ -17,7 +17,7 @@ export const Groups: React.FC = () => {
   return (
     group && (
       <>
-        <Typography variant="h6" sx={{ marginBottom: '.5em' }}>
+        <Typography variant="h6" component="h2" sx={{ marginBottom: '.5em' }}>
           {group.name}
         </Typography>
 
