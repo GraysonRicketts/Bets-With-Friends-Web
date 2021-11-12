@@ -8,8 +8,6 @@ export const createUserProvider = () => {
 
   const setUser = (user: User | null) => {
     if (user) {
-      console.log(JSON.stringify(user));
-      
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     } else {
       localStorage.removeItem(USER_KEY);

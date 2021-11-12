@@ -46,8 +46,6 @@ function useProvideAuth(): AuthContext {
       name: displayName
     }})
     tokenProvider.setToken({ accessToken: jwtToken });
-    console.log({ id, name: displayName });
-    
     userProvider.setUser({ id, name: displayName })
   };
 

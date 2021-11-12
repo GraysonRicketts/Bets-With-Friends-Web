@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { AuthTokens } from "../app/auth/token.provider";
 import { httpInstance  } from "./http";
 
@@ -14,11 +15,11 @@ interface LoginDto {
 }
 
 export async function login(email: string, password: string) {
-    const res = await httpInstance.post<LoginDto, LoginRes>('auth/login', {
+    const res = await httpInstance.post<LoginDto, AxiosResponse<LoginRes>>('auth/login', {
         email, password
     });
 
-    return res;
+    return res.data;
 }
 
 interface CreateUserDto {
