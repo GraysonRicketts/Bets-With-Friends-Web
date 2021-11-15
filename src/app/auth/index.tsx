@@ -22,6 +22,17 @@ export const useAuth = () => {
   return useContext(authContext);
 };
 
+function setBearerToken(token:string ): void {
+  httpInstance.interceptors.request.use((config) => {
+    const headers = config?.headers;
+    if (headers) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    return config;
+  })
+}
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth(): AuthContext {
   const userProvider = createUserProvider();
@@ -29,17 +40,14 @@ function useProvideAuth(): AuthContext {
   const [state, setState] = useState<{ user: User | null }>({ user: storedUser });
   
   const tokenProvider = createTokenProvider();
+  const savedToken = tokenProvider.getToken();
+  if (savedToken) {
+    setBearerToken(savedToken)
+  }
 
   const signIn = (id: string, displayName: string, jwtToken: string) => {
     // Add the token on requests
-    httpInstance.interceptors.request.use((config) => {
-      const headers = config?.headers;
-      if (headers) {
-        headers['Authorization'] = `Bearer ${jwtToken}`
-      }
-
-      return config;
-    })
+    setBearerToken(jwtToken)
 
     setState({user:{
       id,
@@ -51,14 +59,7 @@ function useProvideAuth(): AuthContext {
 
   const signOut = () => {
     // Remove the token from requests
-    httpInstance.interceptors.request.use((config) => {
-      const headers = config?.headers;
-      if (headers && headers['Authorization']) {
-        headers['Authorization'] = '';
-      }
-
-      return config;
-    })
+    setBearerToken('');
 
     setState({ user: null })
     tokenProvider.setToken(null)

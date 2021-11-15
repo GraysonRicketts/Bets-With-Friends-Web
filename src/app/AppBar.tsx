@@ -51,7 +51,7 @@ export const AppBar: React.FC = () => {
   }
 
   const handleFriends = () => { 
-
+    navigate('/friends')
   }
 
   return (

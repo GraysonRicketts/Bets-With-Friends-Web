@@ -11,15 +11,32 @@ import {
 import { Add } from '@mui/icons-material';
 import { useMutation } from 'react-query';
 import { addFriend as addFriendApiCall } from '../../../api/friend';
+import { AxiosError } from 'axios';
+
+interface State {
+  email: string,
+  errMsg: string
+}
 
 export const AddFriend: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const { isError, isLoading, mutate: addFriend  } = useMutation(() => addFriendApiCall(email), {
+  const [{ email, errMsg}, setState] = useState<State>({
+    email: '',
+    errMsg: ''
+  });
+  const { isLoading, mutate: addFriend  } = useMutation(() => addFriendApiCall(email), {
       onSuccess: () => {
-          setEmail('');
+          setState({errMsg: '', email});
       },
-      onError: (error) => {
-        console.error(error);
+      onError: (e) => {
+        const ae = e as AxiosError;
+        if (ae.isAxiosError) {
+          setState({ errMsg: ae.response?.data.message, email })
+        } else if (e instanceof Error) {
+          setState({ errMsg: e.message, email})
+        } else {
+          console.error(e)
+          setState({ errMsg: 'Something went wrong. Please, try again.', email})
+        }
       }
   });
   
@@ -29,7 +46,7 @@ export const AddFriend: React.FC = () => {
   };
   
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setEmail(event.currentTarget.value)
+      setState({errMsg: '', email: event.currentTarget.value})
   };
 
   return (
@@ -52,10 +69,10 @@ export const AddFriend: React.FC = () => {
             value={email}
             onChange={handleEmailChange}
             required
-            error={isError}
+            error={!!errMsg}
             autoFocus
           />
-          {isError && <FormHelperText id="request-failed">Something went wrong. Please, try again.</FormHelperText>}
+          {!!errMsg && <FormHelperText id="request-failed">{errMsg}</FormHelperText>}
         </FormControl>
       </Box>
     </Container>

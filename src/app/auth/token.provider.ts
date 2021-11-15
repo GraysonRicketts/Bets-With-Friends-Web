@@ -16,7 +16,7 @@ export const createTokenProvider = () => {
     _token = token;
   };
 
-  const getToken = async () => {
+  const getToken = () => {
     if (!_token) {
       return null;
     }

@@ -99,9 +99,10 @@ function RequireAuth({ children }: { children: JSX.Element }) {
     // If unauthorized logout and redirect to login page
     if (status === 401) {
       auth.signOut();
+      navigate('/login', { state: { from: location }})
     }
-    navigate('/login', { state: { from: location }})
-
+    
+    
     return Promise.reject(err);
   })
 
