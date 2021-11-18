@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { AddFriend } from './AddFriend';
+import { PendingRequests } from './PendingRequests';
 
 export const Friends: React.FC = () => {
   
@@ -25,12 +26,7 @@ export const Friends: React.FC = () => {
       {/* List of friends */}
       </Paper>
 
-      <Accordion>
-        <AccordionSummary>Requests pending</AccordionSummary>
-        <AccordionDetails>
-          {/* List of friend requests */}
-        </AccordionDetails>
-      </Accordion>
+      <PendingRequests />
     </Container>
   );
 };

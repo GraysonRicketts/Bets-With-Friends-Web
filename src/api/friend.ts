@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { AuthTokens } from "../app/auth/token.provider";
 import { httpInstance  } from "./http";
 import { UserDto } from "./user";
 
@@ -11,6 +10,36 @@ export async function addFriend(email: string) {
     const res = await httpInstance.post<AddFriendDto, AxiosResponse<UserDto>>('friend', {
         email
     });
+
+    return res.data;
+}
+
+interface FriendRequest {
+    userTo: {
+        id: string;
+        displayName: string;
+        email: string;
+        score: number;
+        version: number;
+    };
+    userFrom: {
+        id: string;
+        displayName: string;
+        email: string;
+        score: number;
+        version: number;
+    };
+    id: string;
+    createdAt: Date;
+}
+
+export interface FriendRequestsDto {
+    to: FriendRequest[];
+    from: FriendRequest[];
+  }
+
+export async function getFriendReqs() {
+    const res = await httpInstance.get<FriendRequestsDto>('friend/requests');
 
     return res.data;
 }
