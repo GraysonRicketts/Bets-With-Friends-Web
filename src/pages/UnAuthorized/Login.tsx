@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {useMutation} from 'react-query';
-import {LoadingButton} from '@mui/lab';
-import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { LoadingButton } from '@mui/lab';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../app/auth';
 import { login } from '../../api/auth';
 
@@ -23,9 +23,7 @@ interface State {
   showPassword: boolean;
 }
 
-enum ValidationErrors {
-  
-}
+enum ValidationErrors {}
 
 export const Login: React.FC = () => {
   const [values, setValues] = useState<State>({
@@ -60,14 +58,17 @@ export const Login: React.FC = () => {
     event.preventDefault();
   };
 
-  const { mutate: submit, isLoading} = useMutation(async () => {
-    const { id, accessToken, displayName } = await login(values.email, values.password);
+  const { mutate: submit, isLoading } = useMutation(async () => {
+    const { id, accessToken, displayName } = await login(
+      values.email,
+      values.password,
+    );
 
     auth.signIn(id, displayName, accessToken);
-    
+
     // Redirect to page the user was on
     navigate(-1);
-  })
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,11 +76,11 @@ export const Login: React.FC = () => {
     const { errs } = values;
 
     if (errs.size > 0) {
-        setValues({
-            ...values,
-            errs
-        })
-        return;
+      setValues({
+        ...values,
+        errs,
+      });
+      return;
     }
 
     submit();
@@ -87,21 +88,19 @@ export const Login: React.FC = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-        <Typography component="h1" variant="h5" sx={{mt: 8}}>
-          Login
-        </Typography>
+      <Typography component="h1" variant="h5" sx={{ mt: 8 }}>
+        Login
+      </Typography>
       <Box
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          marginTop: 5 ,
+          marginTop: 5,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        
-
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="email">Email</InputLabel>
           <OutlinedInput
@@ -144,15 +143,19 @@ export const Login: React.FC = () => {
           type="submit"
           variant="contained"
           fullWidth
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 3, mb: 1 }}
           color="success"
           disabled={isLoading}
           loading={isLoading}
         >
           Submit
-        </LoadingButton>
+        </LoadingButton>        
       </Box>
+      <Link to="/create-account">
+          <Typography component="h3" variant="body1" sx={{ mt: 2 }}>
+            Don't have an account? Click here to create one.
+          </Typography>
+        </Link>
     </Container>
   );
 };
-

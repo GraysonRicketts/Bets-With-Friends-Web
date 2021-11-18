@@ -15,7 +15,7 @@ import {useMutation} from 'react-query';
 import { createAccount } from '../../api/auth';
 import {LoadingButton} from '@mui/lab';
 import { useAuth } from '../../app/auth';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface State {
   email: string;
@@ -207,6 +207,12 @@ export const CreateAccount: React.FC = () => {
         >
           Submit
         </LoadingButton>
+
+        <Link to="/login">
+          <Typography component="p" variant="body1" sx={{ mt: 2 }}>
+            Already have an account? Click here to log in.
+          </Typography>
+        </Link>
       </Box>
     </Container>
   );

@@ -7,9 +7,7 @@ import {
   Fab,
   Container
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
 import React from 'react';
-import { useMutation } from 'react-query';
 import { AddFriend } from './AddFriend';
 
 export const Friends: React.FC = () => {
@@ -24,7 +22,7 @@ export const Friends: React.FC = () => {
       <AddFriend />
 
       <Paper>
-    {/* List of friends */}
+      {/* List of friends */}
       </Paper>
 
       <Accordion>

@@ -25,7 +25,7 @@ export const AddFriend: React.FC = () => {
   });
   const { isLoading, mutate: addFriend  } = useMutation(() => addFriendApiCall(email), {
       onSuccess: () => {
-          setState({errMsg: '', email});
+          setState({errMsg: '', email: ''});
       },
       onError: (e) => {
         const ae = e as AxiosError;
