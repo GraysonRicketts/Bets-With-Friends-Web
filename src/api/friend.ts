@@ -43,3 +43,9 @@ export async function getFriendReqs() {
 
     return res.data;
 }
+
+export async function acceptFriendReq(requestId: string) {
+    const res = await httpInstance.post<FriendRequestsDto>('friend/accept', { requestId });
+
+    return res.data;
+}

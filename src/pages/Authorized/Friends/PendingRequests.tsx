@@ -10,21 +10,32 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { useQuery } from 'react-query';
-import { getFriendReqs } from '../../../api/friend';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { acceptFriendReq, getFriendReqs } from '../../../api/friend';
+
+const REQUESTS_KEY = 'requests';
+const ACCEPT_KEY = 'accept';
 
 export const PendingRequests = () => {
-  const { data: reqs, isLoading } = useQuery('requests', getFriendReqs);
+  const queryClient = useQueryClient()
+  const { data: reqs, isLoading: isReqLoading } = useQuery(REQUESTS_KEY, getFriendReqs);
+  const { data, isLoading: isAcceptLoading, mutate: acceptFriend } = useMutation(ACCEPT_KEY, acceptFriendReq, {
+    onSuccess: (_, requestId) => {
+      // Removes the friend from the pending requests list
+      const filteredTo = reqs?.to.filter(r => r.id !== requestId);
+      queryClient.setQueryData(REQUESTS_KEY, { ...reqs, to: filteredTo })
+    }
+  });
 
-  const handleAccept = () => {
-    // TODO
+  const handleAccept = (requestId: string) => {
+    acceptFriend(requestId);
   };
 
   const handleDelete = () => {};
 
   return (
     <Box>
-      {isLoading && <CircularProgress />}
+      {isReqLoading && <CircularProgress />}
       {reqs && (
         <List>
           <ListSubheader>Pending requests ({reqs.to.length})</ListSubheader>
@@ -45,7 +56,7 @@ export const PendingRequests = () => {
                   size="small"
                   variant="contained"
                   color="success"
-                  onClick={handleAccept}
+                  onClick={() => handleAccept(r.id)}
                   sx={{mr: 1}}
                 >
                   Accept
