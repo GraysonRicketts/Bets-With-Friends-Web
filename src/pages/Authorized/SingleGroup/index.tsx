@@ -4,7 +4,7 @@ import { useParams, useResolvedPath } from 'react-router';
 import { Link as RouterLink, useLocation, Outlet, useMatch } from 'react-router-dom';
 import { fakedGroup } from '../../../app/fakedData';
 
-export const Groups: React.FC = () => {
+export const Group: React.FC = () => {
   const { id } = useParams();
   const location = useLocation();
   const resolved = useResolvedPath(location.pathname);

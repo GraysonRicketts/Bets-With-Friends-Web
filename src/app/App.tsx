@@ -6,12 +6,12 @@ import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ProvideAuth, useAuth } from './auth';
-import { Groups } from '../pages/Authorized/Group';
-import { Home } from '../pages/Authorized/Home';
+import { Group } from '../pages/Authorized/SingleGroup';
+import { Groups } from '../pages/Authorized/Groups';
 import { Login } from '../pages/UnAuthorized/Login';
-import { PlacedBets } from '../pages/Authorized/Group/PlacedBets';
-import { CategorizedBets } from '../pages/Authorized/Group/CategorizedBets';
-import { ScoreScreen } from '../pages/Authorized/Group/ScoreScreen';
+import { PlacedBets } from '../pages/Authorized/SingleGroup/PlacedBets';
+import { CategorizedBets } from '../pages/Authorized/SingleGroup/CategorizedBets';
+import { ScoreScreen } from '../pages/Authorized/SingleGroup/ScoreScreen';
 import { httpInstance } from '../api/http';
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -58,14 +58,14 @@ function App() {
               <Route path="create-account" element={<CreateAccount />} />
               <Route path="login" element={<Login />} />
               <Route path="/" element={<AuthorizedApp />}>
-                <Route path="group/:id" element={<Groups />}>
+                <Route path="group/:id" element={<Group />}>
                   <Route index element={<>group page</>} />
                   <Route path="bets" element={<PlacedBets />} />
                   <Route path="categories" element={<CategorizedBets />} />
                   <Route path="score" element={<ScoreScreen />} />
                 </Route>
                 <Route path="friends" element={<Friends />}/>
-                <Route index element={<Home />} />
+                <Route index element={<Groups />} />
               </Route>
 
               <Route

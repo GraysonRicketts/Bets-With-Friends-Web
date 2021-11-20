@@ -1,17 +1,23 @@
 import { Box, Fab, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ButtonRow } from '../../components/ButtonRow';
-import { Group } from '../../interfaces';
+import { ButtonRow } from '../../../components/ButtonRow';
+import { Group } from '../../../interfaces';
+import { CreateGroupModal } from './CreateGroupModal';
 
-export const Home: React.FC = () => {
+export const Groups: React.FC = () => {
+  const [state, setState] = useState({
+    isModalOpen: false,
+  });
   const groups: Group[] = [];
   const navigate = useNavigate();
 
-  const handleCreateGroup = () => {
-    
-  }
+  const toggleCreateGroupModal = () => {
+    setState({
+      isModalOpen: !state.isModalOpen
+    })
+  };
 
   return (
     <Box
@@ -38,10 +44,19 @@ export const Home: React.FC = () => {
           );
         })}
       </Box>
-      <Fab variant="extended" color="primary" aria-label="create group" onClick={handleCreateGroup}>
+      <Fab
+        variant="extended"
+        color="primary"
+        aria-label="create group"
+        onClick={toggleCreateGroupModal}
+      >
         <AddIcon />
         Create group
       </Fab>
+      {state.isModalOpen && (
+        <CreateGroupModal onClose={toggleCreateGroupModal} />
+      )}
     </Box>
   );
 };
+

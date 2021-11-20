@@ -7,15 +7,13 @@ import {
   ListItemText,
   Typography,
   ListSubheader,
-  ListItemIcon,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { acceptFriendReq, getFriendReqs, getFriends } from '../../../api/friend';
+import { LoadingButton } from '@mui/lab';
 
-const REQUESTS_KEY = 'requests';
-const ACCEPT_KEY = 'accept';
-const FRIEND_KEY = 'friends'
+
 
 export const PendingRequests = () => {
   const queryClient = useQueryClient()
@@ -56,15 +54,16 @@ export const PendingRequests = () => {
                 }
                 disableGutters
               >
-                <Button
+                <LoadingButton
                   size="small"
                   variant="contained"
                   color="success"
                   onClick={() => handleAccept(r.id)}
                   sx={{mr: 1}}
+                  loading={isAcceptLoading}
                 >
                   Accept
-                </Button>
+                </LoadingButton>
                 <ListItemText
                   primary={
                     <Typography component="p" variant="body1">
@@ -127,3 +126,7 @@ export const PendingRequests = () => {
     </Box>
   );
 };
+
+const REQUESTS_KEY = `${PendingRequests.name}_requests`;
+const ACCEPT_KEY = `${PendingRequests.name}_accept`;
+const FRIEND_KEY = `${PendingRequests.name}_friends`;
