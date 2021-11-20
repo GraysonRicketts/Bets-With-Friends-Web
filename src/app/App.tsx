@@ -49,6 +49,8 @@ function App() {
               paddingTop: '1em',
               paddingBottom: '1em',
               width: '100%',
+              height: '92%',
+              overflowY: 'auto'
             }}
             className="App"
           >
