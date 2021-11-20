@@ -1,51 +1,73 @@
-import { AxiosResponse } from "axios";
-import { httpInstance  } from "./http";
-import { UserDto } from "./user";
+import { AxiosResponse } from 'axios';
+import { httpInstance } from './http';
+import { UserDto } from './user';
 
 interface AddFriendDto {
-    email: string;
+  email: string;
 }
 
 export async function addFriend(email: string) {
-    const res = await httpInstance.post<AddFriendDto, AxiosResponse<UserDto>>('friend', {
-        email
-    });
+  const res = await httpInstance.post<AddFriendDto, AxiosResponse<UserDto>>(
+    'friend',
+    {
+      email,
+    },
+  );
 
-    return res.data;
+  return res.data;
 }
 
 interface FriendRequest {
-    userTo: {
-        id: string;
-        displayName: string;
-        email: string;
-        score: number;
-        version: number;
-    };
-    userFrom: {
-        id: string;
-        displayName: string;
-        email: string;
-        score: number;
-        version: number;
-    };
+  userTo: {
     id: string;
-    createdAt: Date;
+    displayName: string;
+    email: string;
+    score: number;
+    version: number;
+  };
+  userFrom: {
+    id: string;
+    displayName: string;
+    email: string;
+    score: number;
+    version: number;
+  };
+  id: string;
+  createdAt: Date;
 }
 
 export interface FriendRequestsDto {
-    to: FriendRequest[];
-    from: FriendRequest[];
-  }
+  to: FriendRequest[];
+  from: FriendRequest[];
+}
 
 export async function getFriendReqs() {
-    const res = await httpInstance.get<FriendRequestsDto>('friend/requests');
+  const res = await httpInstance.get<FriendRequestsDto>('friend/requests');
 
-    return res.data;
+  return res.data;
 }
 
 export async function acceptFriendReq(requestId: string) {
-    const res = await httpInstance.post<FriendRequestsDto>('friend/accept', { requestId });
+  const res = await httpInstance.post<FriendRequestsDto>('friend/accept', {
+    requestId,
+  });
 
-    return res.data;
+  return res.data;
+}
+
+interface Friend {
+  id: string;
+  friend: {
+    id: string;
+    displayName: string;
+    email: string;
+    score: number;
+    version: number;
+  };
+}
+
+export async function getFriends() {
+  const res = await httpInstance.get<Friend[]>('friend');
+
+  return res.data;
 }

@@ -18,7 +18,14 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { Friends } from '../pages/Authorized/Friends';
 
 const theme = createTheme();
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false
+    },
+  }
+})
+;
 
 function ErrorFallback(props: FallbackProps) {
   const { error }= props;

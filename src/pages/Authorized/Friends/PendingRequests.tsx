@@ -11,10 +11,11 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { acceptFriendReq, getFriendReqs } from '../../../api/friend';
+import { acceptFriendReq, getFriendReqs, getFriends } from '../../../api/friend';
 
 const REQUESTS_KEY = 'requests';
 const ACCEPT_KEY = 'accept';
+const FRIEND_KEY = 'friends'
 
 export const PendingRequests = () => {
   const queryClient = useQueryClient()
@@ -27,19 +28,22 @@ export const PendingRequests = () => {
     }
   });
 
+  const { data: friends, isLoading: isFriendLoading } = useQuery(FRIEND_KEY, getFriends)
+
   const handleAccept = (requestId: string) => {
     acceptFriend(requestId);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+  };
 
   return (
     <Box>
       {isReqLoading && <CircularProgress />}
-      {reqs && (
         <List>
-          <ListSubheader>Pending requests ({reqs.to.length})</ListSubheader>
-          {reqs.to.map((r) => {
+          <ListSubheader>Pending requests ({reqs?.to.length})</ListSubheader>
+          {isReqLoading && <CircularProgress />}
+          {reqs && reqs.to.map((r) => {
             return (
               <ListItem
                 key={`to_${r.id}`}
@@ -71,8 +75,34 @@ export const PendingRequests = () => {
               </ListItem>
             );
           })}
-          <ListSubheader>Awaiting ({reqs.from.length})</ListSubheader>
-          {reqs.from.map((r) => {
+          <ListSubheader>Friends ({friends?.length})</ListSubheader>
+          {isFriendLoading && <CircularProgress />}
+          {friends && friends.map((f) => {
+            return (
+              <ListItem
+                key={`friend_${f.id}`}
+                secondaryAction={
+                  <>
+                    <Button size="small" onClick={handleDelete}>
+                      <Close />
+                    </Button>
+                  </>
+                }
+                disableGutters
+              >
+                <ListItemText
+                  primary={
+                  f.friend.displayName
+                  }
+                />
+              </ListItem>
+            );
+          })}
+
+
+          <ListSubheader>Awaiting ({reqs?.from.length})</ListSubheader>
+          {isReqLoading && <CircularProgress />}
+          {reqs && reqs.from.map((r) => {
             return (
               <ListItem
                 key={`from_${r.id}`}
@@ -87,16 +117,13 @@ export const PendingRequests = () => {
               >
                 <ListItemText
                   primary={
-                    <Typography component="p" variant="body1">
-                      {r.userTo.email}
-                    </Typography>
+                      r.userTo.email
                   }
                 />
               </ListItem>
             );
           })}
         </List>
-      )}
     </Box>
   );
 };
