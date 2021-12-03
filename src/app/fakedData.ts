@@ -1,4 +1,4 @@
-import { Bet, Group, User, Wager, Option, Category } from '../interfaces';
+import { Bet, User, Wager, Option, Category } from '../interfaces';
 
 export const fakedMembers: User[] = [
   {
@@ -62,10 +62,3 @@ export const fakedBets: Bet[] = [
     outcome: fakedOptions[0],
   },
 ];
-
-export const fakedGroup: Group = {
-  id: '123',
-  name: 'Bears boys',
-  members: fakedMembers,
-  bets: fakedBets,
-};

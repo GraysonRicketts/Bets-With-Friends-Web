@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Bet, User, Group, uuid, points } from '../../../interfaces';
+import { Bet, User, uuid, points } from '../../../interfaces';
 
 
 interface PooledWinner {

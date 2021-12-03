@@ -1,4 +1,3 @@
-export type { Group } from './Group/Group';
 export type { Wager } from './Bet/Wager';
 export type { User } from './User';
 export type { Bet } from './Bet/Bet';

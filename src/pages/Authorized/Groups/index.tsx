@@ -1,16 +1,17 @@
-import { Box, Fab, Typography } from '@mui/material';
+import { Box, CircularProgress, Fab, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ButtonRow } from '../../../components/ButtonRow';
-import { Group } from '../../../interfaces';
 import { CreateGroupModal } from './CreateGroupModal';
+import { getGroups, Group } from '../../../api/group';
+import { useQuery } from 'react-query';
 
 export const Groups: React.FC = () => {
   const [state, setState] = useState({
     isModalOpen: false,
   });
-  const groups: Group[] = [];
+  const {isLoading, data: groups} = useQuery(GROUPS_KEY, getGroups);
   const navigate = useNavigate();
 
   const toggleCreateGroupModal = () => {
@@ -29,7 +30,7 @@ export const Groups: React.FC = () => {
       }}
     >
       <Box>
-        {groups.map((g) => {
+        {groups && groups.map((g: Group) => {
           return (
             <ButtonRow
               onClick={() => {
@@ -38,11 +39,11 @@ export const Groups: React.FC = () => {
               key={`/group/${g.id}/bets`}
             >
               <Typography>{g.name}</Typography>
-              <Typography>{g.members.length} Friends</Typography>
-              <Typography>{g.bets.length} Bets</Typography>
+              <Typography>{g.userGroups.length} Memebers</Typography>
             </ButtonRow>
           );
         })}
+        {isLoading && <CircularProgress />}
       </Box>
       <Fab
         variant="extended"
@@ -60,3 +61,4 @@ export const Groups: React.FC = () => {
   );
 };
 
+const GROUPS_KEY = `${Groups.name}_GROUPS`;

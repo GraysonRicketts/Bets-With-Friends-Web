@@ -4,7 +4,6 @@ import {
   Chip,
   CircularProgress,
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -17,7 +16,6 @@ import React, { useState } from 'react';
 import { getFriends } from '../../../api/friend';
 import { createGroup as createGroupApi } from '../../../api/group';
 import { Modal } from '../../../components/Modal';
-import { SxProps, Theme } from '@mui/system';
 import { AxiosError } from 'axios';
 
 interface Props {
