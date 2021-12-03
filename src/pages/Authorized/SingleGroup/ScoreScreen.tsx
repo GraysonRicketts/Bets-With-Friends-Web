@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Bet, User, uuid, points } from '../../../interfaces';
+import { Bet } from '../../../api/bet';
+import { User, uuid, points } from '../../../interfaces';
 
 
 interface PooledWinner {
@@ -11,17 +12,24 @@ interface PooledWinner {
 // TODO: Add unit tests
 function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   const placedBets = bets.filter(
-    (b) => !b.isOpen && b.wagers.find((w) => w.user.id === userId),
+    (b) => b.closedAt && b.wagers.find((w) => w.user.id === userId),
   );
   const wonBets = placedBets.filter(
-    (b) =>
-      b.outcome?.id === b.wagers.find((w) => w.user.id === userId)?.option.id,
+    (b) => {
+      const winningOption = b.options.find(o => o.isFinalOption);
+      if (!winningOption) {
+        return false;
+      }
+
+      return winningOption.id === b.wagers.find((w) => w.user.id === userId)?.option.id
+    }
   );
 
   // Calculate winning pool
-  const pooledWinners: PooledWinner[] = wonBets.map((b) => {
+  const pooledWinners: any[] = wonBets.map((b) => {
+    const winningOption = b.options.find(o => o.isFinalOption);
     const winners = b.wagers
-      .filter((w) => w.option.id === b.outcome?.id)
+      .filter((w) => w.option.id === winningOption?.id)
       .map((w) => w.user);
     const poolTotal = b.wagers
       .map((w) => w.amount)
@@ -37,7 +45,11 @@ function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   return winnings.reduce((pv, cv) => pv + cv, 0);
 }
 
-export const ScoreScreen: React.FC = () => {
+interface Props {
+  bets: Bet[]
+}
+
+export const ScoreScreen: React.FC<Props> = () => {
   // const overallScores: { user: User; overallScore: points }[] =
   //   group.members.map((user) => {
   //     const overallScore = calculateOverallUserScore(user.id, group.bets);

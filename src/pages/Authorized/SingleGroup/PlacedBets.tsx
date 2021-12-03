@@ -2,13 +2,14 @@ import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { ButtonRow } from '../../../components/ButtonRow';
-import { Bet, Category, uuid } from '../../../interfaces';
+import { Category, uuid } from '../../../interfaces';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
+import { Bet } from '../../../api/bet';
 
 interface GroupedBets {
   isPlaced?: boolean;
@@ -25,7 +26,7 @@ function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
   ];
 
   bets.forEach((b) => {
-    if (!b.isOpen) {
+    if (b.closedAt) {
       groupedBets.find((gb) => !gb.isOpen)?.bets.push(b);
     } else if (b.wagers.find((w) => w.user.id === userId)) {
       groupedBets.find((gb) => gb.isPlaced)?.bets.push(b);
@@ -37,14 +38,21 @@ function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
   return groupedBets;
 }
 
-export const PlacedBets: React.FC = () => {
+interface Props {
+  bets: Bet[]
+}
+
+export const PlacedBets: React.FC<Props> = ({bets}) => {
   const userId = useSelector((state: RootState) => state.user.id);
-  const groupedBets = groupByPlacement([], userId);
+  const groupedBets = groupByPlacement(bets, userId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
   const [isViewOnlyModalOpen, setIsViewOnlyModalOpen] = useState(false);
   const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
+
+  console.log(bets);
+  
 
   return (
     <>

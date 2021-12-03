@@ -34,9 +34,9 @@ export const Groups: React.FC = () => {
           return (
             <ButtonRow
               onClick={() => {
-                navigate(`/group/${g.id}/bets`);
+                navigate(`/group/${g.id}`);
               }}
-              key={`/group/${g.id}/bets`}
+              key={`/group/${g.id}`}
             >
               <Typography>{g.name}</Typography>
               <Typography>{g.userGroups.length} Memebers</Typography>

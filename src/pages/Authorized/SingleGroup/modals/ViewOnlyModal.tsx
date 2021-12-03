@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from '@mui/material';
-import { Bet } from '../../../../interfaces';
+import { Bet } from 'src/api/bet';
 import { modalStyle } from './modalStyle';
 
 interface Props {
@@ -9,6 +9,13 @@ interface Props {
 }
 
 export const ViewOnlyModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
+  const finalOption = bet.options.find(o => o.isFinalOption);
+  if (!finalOption) {
+    console.error('should never happen');
+    return <></>
+  }
+
+
   return (
     <Modal
       open={isOpen}
@@ -24,21 +31,21 @@ export const ViewOnlyModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
           </Typography>
         )}
         <Typography variant="subtitle2" sx={{ marginBottom: '1em' }}>
-          Final outcome: {bet.outcome?.name}
+          Final outcome: {finalOption.name}
         </Typography>
 
         {bet.wagers.map((w) => {
           return (
             <Typography
               variant="body1"
-              key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}
+              key={`wager-${w.user.displayName}-${w.option.name}-${w.amount}`}
             >
-              {w.user.name} - {w.option.name} - {w.amount}
+              {w.user.displayName} - {w.option.name} - {w.amount}
             </Typography>
           );
         })}
 
-        <Typography>Outcome: {bet.outcome?.name}</Typography>
+        <Typography>Outcome: {finalOption.name}</Typography>
       </Box>
     </Modal>
   );

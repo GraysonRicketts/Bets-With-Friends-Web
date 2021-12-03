@@ -1,6 +1,7 @@
 export interface Bet {
     title: string;
     category: {
+        id: string;
         name: string;
     } | null;
     wagers: {
@@ -19,7 +20,13 @@ export interface Bet {
     options: {
         id: string;
         name: string;
+        isFinalOption: boolean;
     }[];
+    closedAt: Date | null;
+    closedBy: {
+        id: string;
+        displayName: string;
+    } | null;
     groupId: string;
     id: string;
 }

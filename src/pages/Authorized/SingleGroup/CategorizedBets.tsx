@@ -2,12 +2,13 @@ import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { ButtonRow } from '../../../components/ButtonRow';
-import { Bet, Category, uuid } from '../../../interfaces';
+import { Category, uuid } from '../../../interfaces';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { AddBetModal } from './modals/AddBetModal';
+import { Bet } from '../../../api/bet';
 
 interface GroupedBets {
   category: Category | undefined;
@@ -26,7 +27,7 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
     if (categoryGroup) {
       categoryGroup.bets.push(b);
     } else {
-      groupedBets.push({ category: b.category, bets: [b] });
+      groupedBets.push({ category: b.category || undefined, bets: [b] });
     }
   });
 
@@ -34,7 +35,7 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
 }
 
 function getWagerStyle(bet: Bet, userId: uuid) {
-  if (!bet.isOpen) {
+  if (bet.closedAt) {
     return { backgroundColor: 'grey.400' } as const;
   }
 
@@ -49,7 +50,11 @@ function getWagerStyle(bet: Bet, userId: uuid) {
   } as const;
 }
 
-export const CategorizedBets: React.FC = () => {
+interface Props {
+  bets: Bet[]
+}
+
+export const CategorizedBets: React.FC<Props> = () => {
   const categorizedBets = groupByCategory([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

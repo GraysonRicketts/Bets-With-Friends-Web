@@ -1,15 +1,41 @@
 import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material';
-import React from 'react';
+import React, { ReactElement, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
-import { getGroupWithBet } from '../../../api/group';
+import { Bet } from '../../../api/bet';
+import { getGroupWithBet, GroupWithBet } from '../../../api/group';
+import { CategorizedBets } from './CategorizedBets';
+import { PlacedBets } from './PlacedBets';
+import { ScoreScreen } from './ScoreScreen';
+
+interface Tab {
+  label: string;
+  value: string;
+  component: (bets: Bet[]) => ReactElement;
+}
+
+const tabs: Tab[] = [
+  { value: 'bets', label: 'Bets', component: (bets: Bet[]) => <PlacedBets bets={bets} /> },
+  {
+    label: 'Categories',
+    value: 'categories',
+    component: (bets: Bet[]) => <CategorizedBets bets={bets} />,
+  },
+  { label: 'Score', value: 'score', component: (bets: Bet[]) => <ScoreScreen bets={bets} /> },
+];
 
 export const Group: React.FC = () => {
   const { id } = useParams();
 
+  const [tab, setTab] = useState(tabs[0].value);
+
   const { isLoading, data: group } = useQuery([GROUP_KEY, id], () =>
     getGroupWithBet(id || ''),
   );
+
+  const handleTabChange = (_: React.SyntheticEvent, tabValue: string) => {
+    setTab(tabValue);
+  };
 
   return (
     <>
@@ -19,10 +45,15 @@ export const Group: React.FC = () => {
             {group.name}
           </Typography>
 
-          <Tabs value={'bets'} variant="fullWidth" aria-label="group nav tab">
-            <Tab value="bets" label="Bets" />
-            <Tab label="Categories" value="categories" />
-            <Tab label="Score" value="score" />
+          <Tabs
+            value={tab}
+            variant="fullWidth"
+            onChange={handleTabChange}
+            aria-label="group nav tab"
+          >
+            {tabs.map((t) => (
+              <Tab value={t.value} label={t.label} />
+            ))}
           </Tabs>
 
           <Box
@@ -30,7 +61,9 @@ export const Group: React.FC = () => {
               paddingTop: '1em',
               marginTop: '1em',
             }}
-          ></Box>
+          >
+            {tabs.find((t) => t.value === tab)?.component(group.bets)}
+          </Box>
         </>
       )}
       {isLoading && <CircularProgress />}

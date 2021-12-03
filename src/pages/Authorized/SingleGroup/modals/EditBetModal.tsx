@@ -12,9 +12,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { Bet, Option } from '../../../../interfaces';
+import { Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
 import { RootState } from '../../../../app/store';
+import { Bet } from 'src/api/bet';
 
 interface Props {
   bet: Bet;
@@ -147,10 +148,10 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
         {bet.wagers.map((w) => {
           return (
             <Typography
-              key={`wager-${w.user.name}-${w.option.name}-${w.amount}`}
+              key={`wager-${w.user.displayName}-${w.option.name}-${w.amount}`}
               variant="body1"
             >
-              {w.user.name} - {w.option.name} - {w.amount}
+              {w.user.displayName} - {w.option.name} - {w.amount}
             </Typography>
           );
         })}
