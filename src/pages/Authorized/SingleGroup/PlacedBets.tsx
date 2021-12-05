@@ -1,15 +1,15 @@
 import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
-import { ButtonRow } from '../../../components/ButtonRow';
-import { Category, uuid } from '../../../interfaces';
+import React, { useContext, useState } from 'react';
+import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../app/store';
+import { RootState } from 'src/app/store';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
-import { Bet } from '../../../api/bet';
+import { Bet, Category } from 'src/api/bet';
+import { GroupContext } from '.';
 
 interface GroupedBets {
   isPlaced?: boolean;
@@ -18,7 +18,7 @@ interface GroupedBets {
 }
 
 // TODO: add unit tests
-function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
+function groupByPlacement(bets: Bet[], userId: string): GroupedBets[] {
   const groupedBets: GroupedBets[] = [
     { isPlaced: true, isOpen: true, bets: [] },
     { isPlaced: false, isOpen: true, bets: [] },
@@ -38,21 +38,16 @@ function groupByPlacement(bets: Bet[], userId: uuid): GroupedBets[] {
   return groupedBets;
 }
 
-interface Props {
-  bets: Bet[]
-}
-
-export const PlacedBets: React.FC<Props> = ({bets}) => {
+export const PlacedBets: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.id);
-  const groupedBets = groupByPlacement(bets, userId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
   const [isViewOnlyModalOpen, setIsViewOnlyModalOpen] = useState(false);
   const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
 
-  console.log(bets);
-  
+  const group = useContext(GroupContext);
+  const groupedBets = groupByPlacement(group.bets, userId);
 
   return (
     <>
@@ -161,18 +156,12 @@ export const PlacedBets: React.FC<Props> = ({bets}) => {
           }}
         />
       )}
-      {/* <AddBetModal
-        isOpen={isAddModalOpen}
+      {isAddModalOpen && <AddBetModal
         onClose={() => {
           setIsAddModalOpen(false);
         }}
-        categories={[]
-          .map((b) => b.category)
-          .filter((c: Category | undefined): c is Category => {
-            return !!c;
-          })
-          .filter((v, i, pv) => pv.indexOf(v) === i)}
-      /> */}
+        categories={group.categories}
+      />}
     </>
   );
 };

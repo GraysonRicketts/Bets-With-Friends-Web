@@ -1,4 +1,4 @@
-import { Bet } from './bet';
+import { Bet, Category } from './bet';
 import { httpInstance } from './http';
 
 interface CreateGroupDto {
@@ -42,6 +42,7 @@ export async function getGroups() {
 
 export interface GroupWithBet extends Group {
   bets: Bet[];
+  categories: Category[];
 }
 
 export async function getGroupWithBet(id: string) {

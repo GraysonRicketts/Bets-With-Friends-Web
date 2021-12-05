@@ -45,11 +45,7 @@ function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   return winnings.reduce((pv, cv) => pv + cv, 0);
 }
 
-interface Props {
-  bets: Bet[]
-}
-
-export const ScoreScreen: React.FC<Props> = () => {
+export const ScoreScreen: React.FC = () => {
   // const overallScores: { user: User; overallScore: points }[] =
   //   group.members.map((user) => {
   //     const overallScore = calculateOverallUserScore(user.id, group.bets);

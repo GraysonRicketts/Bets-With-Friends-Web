@@ -1,4 +1,4 @@
-import { User, Wager, Option, Category } from '../interfaces';
+import { User, Wager, Option } from '../interfaces';
 
 export const fakedMembers: User[] = [
   {

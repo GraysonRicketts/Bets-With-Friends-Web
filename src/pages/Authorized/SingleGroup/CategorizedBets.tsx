@@ -1,14 +1,13 @@
 import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
-import { ButtonRow } from '../../../components/ButtonRow';
-import { Category, uuid } from '../../../interfaces';
+import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../app/store';
+import { RootState } from 'src/app/store';
 import { AddBetModal } from './modals/AddBetModal';
-import { Bet } from '../../../api/bet';
+import { Bet, Category } from 'src/api/bet';
 
 interface GroupedBets {
   category: Category | undefined;
@@ -34,7 +33,7 @@ function groupByCategory(bets: Bet[]): GroupedBets[] {
   return groupedBets;
 }
 
-function getWagerStyle(bet: Bet, userId: uuid) {
+function getWagerStyle(bet: Bet, userId: string) {
   if (bet.closedAt) {
     return { backgroundColor: 'grey.400' } as const;
   }
@@ -50,11 +49,8 @@ function getWagerStyle(bet: Bet, userId: uuid) {
   } as const;
 }
 
-interface Props {
-  bets: Bet[]
-}
 
-export const CategorizedBets: React.FC<Props> = () => {
+export const CategorizedBets: React.FC = () => {
   const categorizedBets = groupByCategory([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

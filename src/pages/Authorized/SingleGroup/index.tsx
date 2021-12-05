@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material';
-import React, { ReactElement, useState } from 'react';
+import React, { createContext, ReactElement, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
-import { Bet } from '../../../api/bet';
-import { getGroupWithBet, GroupWithBet } from '../../../api/group';
+import { Bet } from 'src/api/bet';
+import { getGroupWithBet, GroupWithBet } from 'src/api/group';
 import { CategorizedBets } from './CategorizedBets';
 import { PlacedBets } from './PlacedBets';
 import { ScoreScreen } from './ScoreScreen';
@@ -11,18 +11,22 @@ import { ScoreScreen } from './ScoreScreen';
 interface Tab {
   label: string;
   value: string;
-  component: (bets: Bet[]) => ReactElement;
+  component: ReactElement;
 }
 
 const tabs: Tab[] = [
-  { value: 'bets', label: 'Bets', component: (bets: Bet[]) => <PlacedBets bets={bets} /> },
+  { value: 'bets', label: 'Bets', component:  <PlacedBets /> },
   {
     label: 'Categories',
     value: 'categories',
-    component: (bets: Bet[]) => <CategorizedBets bets={bets} />,
+    component: <CategorizedBets />,
   },
-  { label: 'Score', value: 'score', component: (bets: Bet[]) => <ScoreScreen bets={bets} /> },
+  { label: 'Score', value: 'score', component:  <ScoreScreen /> },
 ];
+
+// Forcing default value since we will load the group in with bet later and pass
+// it in the context. Not the best but...:shrug:
+export const GroupContext = createContext<GroupWithBet>({} as GroupWithBet);
 
 export const Group: React.FC = () => {
   const { id } = useParams();
@@ -62,7 +66,9 @@ export const Group: React.FC = () => {
               marginTop: '1em',
             }}
           >
-            {tabs.find((t) => t.value === tab)?.component(group.bets)}
+            <GroupContext.Provider value={group}>
+              {tabs.find((t) => t.value === tab)?.component}
+            </GroupContext.Provider>
           </Box>
         </>
       )}
@@ -71,4 +77,4 @@ export const Group: React.FC = () => {
   );
 };
 
-const GROUP_KEY = `${Group.name}_GROUP`;
+export const GROUP_KEY = `${Group.name}_GROUP`;
