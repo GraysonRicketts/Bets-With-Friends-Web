@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/app/store';
 import { AddBetModal } from './modals/AddBetModal';
 import { Bet, Category } from 'src/api/bet';
+import { useAuth } from 'src/app/auth';
 
 interface GroupedBets {
   category: Category | undefined;
@@ -55,7 +54,7 @@ export const CategorizedBets: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
-  const userId = useSelector((state: RootState) => state.user.id);
+  const auth = useAuth();
 
   return (
     <>
@@ -71,7 +70,7 @@ export const CategorizedBets: React.FC = () => {
                     setIsEditModalOpen(true);
                     setEditBet(b);
                   }}
-                  sx={getWagerStyle(b, userId)}
+                  sx={getWagerStyle(b, auth.user?.id || '')}
                   key={`categorized_bet_title_${b.id}`}
                 >
                   <Typography>{b.title}</Typography>

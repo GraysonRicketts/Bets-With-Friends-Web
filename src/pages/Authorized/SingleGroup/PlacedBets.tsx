@@ -4,8 +4,7 @@ import React, { useContext, useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/app/store';
+import { useAuth } from 'src/app/auth';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
 import { Bet, Category } from 'src/api/bet';
@@ -39,7 +38,7 @@ function groupByPlacement(bets: Bet[], userId: string): GroupedBets[] {
 }
 
 export const PlacedBets: React.FC = () => {
-  const userId = useSelector((state: RootState) => state.user.id);
+  const auth = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
@@ -47,7 +46,7 @@ export const PlacedBets: React.FC = () => {
   const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
 
   const group = useContext(GroupContext);
-  const groupedBets = groupByPlacement(group.bets, userId);
+  const groupedBets = groupByPlacement(group.bets, auth.user?.id || '');
 
   return (
     <>

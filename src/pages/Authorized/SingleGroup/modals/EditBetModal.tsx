@@ -10,11 +10,10 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { useSelector } from 'react-redux';
+import { useAuth } from 'src/app/auth';
 import { useState } from 'react';
 import { Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
-import { RootState } from '../../../../app/store';
 import { Bet } from 'src/api/bet';
 
 interface Props {
@@ -34,7 +33,7 @@ const optionButtonStyle = {
 };
 
 export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
-  const userId = useSelector((state: RootState) => state.user.id);
+  const auth = useAuth();
   const [modalProgress, setModalProgress] = useState<ModalProgress>(
     ModalProgress.Edit,
   );
@@ -88,7 +87,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
       </Box>
 
       <Box sx={{ marginBottom: '1em' }}>
-        {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === userId) && (
+        {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === auth.user?.id) && (
           <FormControl sx={{ marginBottom: '1em', width: '100%' }}>
             <ButtonGroup variant="outlined" aria-label="options button group">
               {bet.options.map((o) => {
