@@ -12,21 +12,22 @@ import {
   Chip,
   CircularProgress,
 } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { Category } from 'src/api/bet';
 import { modalStyle } from './modalStyle';
 import { createBet as createBetApi } from 'src/api/bet';
 import { useMutation, useQueryClient } from 'react-query';
-import { GroupContext, GROUP_KEY } from '..';
+import { GROUP_KEY } from '..';
 import { GroupWithBet } from 'src/api/group';
 
 interface Props {
   onClose: () => void;
   categories: Category[];
+  groupId: string;
 }
 
-export const AddBetModal: React.FC<Props> = ({ onClose, categories }) => {
+export const AddBetModal: React.FC<Props> = ({ onClose, categories, groupId }) => {
   const [title, setTitle] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -40,14 +41,12 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories }) => {
   const [isOptionError, setIsOptionError] = useState(false);
   const [isAmountError, setIsAmountError] = useState(false);
   const [isAddedOptionError, setIsAddedOptionError] = useState(false);
-
-  const group = useContext(GroupContext);
   const queryClient = useQueryClient();
 
   const { isLoading, mutate: createBet } = useMutation(
     () => {
       return createBetApi({
-        groupId: group.id,
+        groupId: groupId,
         title,
         options: addedOptions,
         category: selectedCategory?.name || newCategory,
@@ -57,7 +56,7 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories }) => {
     },
     {
       onSuccess: (newBet) => {
-        queryClient.setQueryData<GroupWithBet | undefined>([GROUP_KEY, group.id], (og) => {
+        queryClient.setQueryData<GroupWithBet | undefined>([GROUP_KEY, groupId], (og) => {
           og?.bets.push(newBet);
           return og;
         });

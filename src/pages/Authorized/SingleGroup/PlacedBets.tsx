@@ -7,8 +7,8 @@ import { EditBetModal } from './modals/EditBetModal';
 import { useAuth } from 'src/app/auth';
 import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
-import { Bet, Category } from 'src/api/bet';
-import { GroupContext } from '.';
+import { Bet } from 'src/api/bet';
+import { GroupWithBet } from 'src/api/group';
 
 interface GroupedBets {
   isPlaced?: boolean;
@@ -37,15 +37,14 @@ function groupByPlacement(bets: Bet[], userId: string): GroupedBets[] {
   return groupedBets;
 }
 
-export const PlacedBets: React.FC = () => {
+
+export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
   const auth = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
   const [isViewOnlyModalOpen, setIsViewOnlyModalOpen] = useState(false);
   const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
-
-  const group = useContext(GroupContext);
   const groupedBets = groupByPlacement(group.bets, auth.user?.id || '');
 
   return (
@@ -160,6 +159,7 @@ export const PlacedBets: React.FC = () => {
           setIsAddModalOpen(false);
         }}
         categories={group.categories}
+        groupId={group.id}
       />}
     </>
   );

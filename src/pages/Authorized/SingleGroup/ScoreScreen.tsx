@@ -1,7 +1,8 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Bet } from '../../../api/bet';
-import { User, uuid, points } from '../../../interfaces';
+import { Bet } from 'src/api/bet';
+import { GroupWithBet } from 'src/api/group';
+import { User, uuid, points } from 'src/interfaces';
 
 
 interface PooledWinner {
@@ -45,7 +46,7 @@ function calculateOverallUserScore(userId: uuid, bets: Bet[]) {
   return winnings.reduce((pv, cv) => pv + cv, 0);
 }
 
-export const ScoreScreen: React.FC = () => {
+export const ScoreScreen: React.FC<{ group: GroupWithBet}> = ({group}) => {
   // const overallScores: { user: User; overallScore: points }[] =
   //   group.members.map((user) => {
   //     const overallScore = calculateOverallUserScore(user.id, group.bets);

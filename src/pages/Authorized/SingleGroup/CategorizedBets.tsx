@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { AddBetModal } from './modals/AddBetModal';
 import { Bet, Category } from 'src/api/bet';
+import { GroupWithBet } from 'src/api/group';
 import { useAuth } from 'src/app/auth';
 
 interface GroupedBets {
@@ -49,7 +50,7 @@ function getWagerStyle(bet: Bet, userId: string) {
 }
 
 
-export const CategorizedBets: React.FC = () => {
+export const CategorizedBets: React.FC<{ group: GroupWithBet}> = ({ group }) => {
   const categorizedBets = groupByCategory([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
