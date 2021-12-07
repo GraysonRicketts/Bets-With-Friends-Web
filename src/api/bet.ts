@@ -74,3 +74,16 @@ export const addWager = async (dto: AddWagerDto) => {
 
   return res.data;
 }
+
+interface FinalizeBetDto {
+  betId: string;
+  winningOptionId: string;
+}
+export const closeBet = async (dto: FinalizeBetDto) => {
+  const res = await httpInstance.post<FinalizeBetDto, AxiosResponse<Bet>>(
+    'bet/finalize',
+    dto,
+  );
+
+  return res.data;
+}

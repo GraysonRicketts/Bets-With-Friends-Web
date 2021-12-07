@@ -14,7 +14,11 @@ import { useAuth } from 'src/app/auth';
 import { useState } from 'react';
 import { Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
-import { addWager as addWagerApi, Bet } from 'src/api/bet';
+import {
+  addWager as addWagerApi,
+  closeBet as closeBetApi,
+  Bet,
+} from 'src/api/bet';
 import { useMutation, useQueryClient } from 'react-query';
 import { GroupWithBet } from '../../../../api/group';
 import { GROUP_KEY } from '..';
@@ -46,16 +50,6 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
   const [isWagerConfirmOpen, setIsWagerConfirmOpen] = useState(false);
   const [isConfirmDelete, setIsConfirmDelete] = useState(false);
 
-  // TODO: use responsiveness to fix this
-  const [isWagerUnplaced, setIsWagerUnplaced] = useState<boolean>(true);
-
-  const handleClose = () => {
-    setSelectedOutcome(undefined);
-    setBetInput(0);
-    setModalProgress(ModalProgress.Edit);
-    onClose();
-  };
-
   const [betInput, setBetInput] = useState(0);
   const [isBetInputError, setIsBetInputError] = useState(false);
   const handleBetInputChange = (
@@ -79,28 +73,61 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
   };
 
   const queryClient = useQueryClient();
-  const { isLoading, mutate: addWager } = useMutation(
+  const { isLoading: isAddingWager, mutate: addWager } = useMutation(
     () => {
       return addWagerApi({
         betId: bet.id,
         optionId: wagerOption?.id || '',
-        amount: betInput
+        amount: betInput,
       });
     },
     {
       onSuccess: (newWager) => {
-        queryClient.setQueryData<GroupWithBet | undefined>([GROUP_KEY, bet.groupId], (og) => {
-          og?.bets.find(b => b.id === bet.id)?.wagers.push(newWager);
-          return og;
-        });
-
-        setIsWagerUnplaced(false);
-        setIsWagerConfirmOpen(false);
-        handleClose();
+        queryClient.setQueryData<GroupWithBet | undefined>(
+          [GROUP_KEY, bet.groupId],
+          (og) => {
+            og?.bets.find((b) => b.id === bet.id)?.wagers.push(newWager);
+            return og;
+          },
+        );
+        onClose();
       },
     },
   );
 
+  const { isLoading: isClosingBet, mutate: closeBet } = useMutation(
+    () => {
+      return closeBetApi({
+        betId: bet.id,
+        winningOptionId: selectedOutcome?.id || '',
+      });
+    },
+    {
+      onSuccess: (newBet) => {
+        queryClient.setQueryData<GroupWithBet | undefined>(
+          [GROUP_KEY, bet.groupId],
+          (og) => {
+            if (!og) {
+              console.error('This should never happen');
+              return;
+            }
+
+            const index = og.bets.findIndex((b) => b.id === bet.id);
+            if (!index) {
+              console.error('This should never happen');
+              return;
+            }
+
+            og.bets[index] = newBet;
+            return og;
+          },
+        );
+        onClose();
+      },
+    },
+  );
+
+  const hasPlacedWager = !!bet.wagers.find((w) => w.user.id === auth.user?.id);
   const EditPage = (
     <>
       <Box sx={{ marginBottom: '1em' }}>
@@ -113,7 +140,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
       </Box>
 
       <Box sx={{ marginBottom: '1em' }}>
-        {isWagerUnplaced && !bet.wagers.find((w) => w.user.id === auth.user?.id) && (
+        {!hasPlacedWager && (
           <FormControl sx={{ marginBottom: '1em', width: '100%' }}>
             <ButtonGroup variant="outlined" aria-label="options button group">
               {bet.options.map((o) => {
@@ -182,22 +209,26 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
         })}
       </Box>
 
-      <Button
-        onClick={() => {
-          setModalProgress(ModalProgress.SelectOption);
-        }}
-        variant="contained"
-      >
-        Close bet
-      </Button>
-      <IconButton
-        aria-label="delete-bet"
-        onClick={() => {
-          setIsConfirmDelete(true);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {hasPlacedWager && (
+        <>
+          <Button
+            onClick={() => {
+              setModalProgress(ModalProgress.SelectOption);
+            }}
+            variant="contained"
+          >
+            Close bet
+          </Button>
+          <IconButton
+            aria-label="delete-bet"
+            onClick={() => {
+              setIsConfirmDelete(true);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
     </>
   );
 
@@ -235,7 +266,13 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
         Final outcome - {bet.title} - {selectedOutcome?.name}
       </Typography>
 
-      <Button variant="outlined" sx={optionButtonStyle}>
+      <Button
+        variant="outlined"
+        sx={optionButtonStyle}
+        onClick={() => {
+          closeBet();
+        }}
+      >
         Yes
       </Button>
       <Button variant="outlined">No</Button>
@@ -244,11 +281,11 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
 
   const handleAddWager = () => {
     addWager();
-  }
+  };
 
   return (
     <>
-      <Modal open onClose={handleClose}>
+      <Modal open onClose={onClose}>
         <Box sx={modalStyle}>
           {modalProgress === ModalProgress.Edit
             ? EditPage
@@ -275,7 +312,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             variant="outlined"
             onClick={handleAddWager}
             sx={optionButtonStyle}
-            loading={isLoading}
+            loading={isAddingWager}
           >
             Yes
           </LoadingButton>
@@ -284,7 +321,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             onClick={() => {
               setIsWagerConfirmOpen(false);
             }}
-            loading={isLoading}
+            loading={isAddingWager}
           >
             No
           </LoadingButton>
@@ -314,6 +351,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             onClick={() => {
               setIsConfirmDelete(false);
             }}
+            loading={isClosingBet}
           >
             Yes
           </LoadingButton>
@@ -322,6 +360,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             onClick={() => {
               setIsConfirmDelete(false);
             }}
+            loading={isClosingBet}
           >
             No
           </LoadingButton>
