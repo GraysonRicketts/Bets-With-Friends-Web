@@ -41,8 +41,8 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories, groupId }) =
   const [isOptionError, setIsOptionError] = useState(false);
   const [isAmountError, setIsAmountError] = useState(false);
   const [isAddedOptionError, setIsAddedOptionError] = useState(false);
+  
   const queryClient = useQueryClient();
-
   const { isLoading, mutate: createBet } = useMutation(
     () => {
       return createBetApi({
@@ -64,10 +64,32 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories, groupId }) =
     },
   );
 
-  const onAddBet = () => {
+  const handleClickSave = () => {
+    let error = false;
+    if (!selectedOption) {
+      error = true;
+      setIsOptionError(true);
+    }
+    if (!title) {
+      error = true;
+      setIsBetError(true);
+    }
+    if (!amount) {
+      error = true;
+      setIsAmountError(true);
+    }
+    if (addedOptions.length < 2) {
+      error = true;
+      setIsAddedOptionError(true);
+    }
+
+    if (error) {
+      return;
+    }
+    
     createBet();
     onClose();
-  };
+  }
 
   return (
     <Modal
@@ -174,7 +196,7 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories, groupId }) =
                 <IconButton
                   aria-label="add"
                   onClick={() => {
-                    if (!additionalOption) {
+                    if (!additionalOption || !addedOptions.indexOf(additionalOption)) {
                       return;
                     }
 
@@ -238,30 +260,7 @@ export const AddBetModal: React.FC<Props> = ({ onClose, categories, groupId }) =
               />
             </div>
             <Button
-              onClick={() => {
-                let error = false;
-                if (!selectedOption) {
-                  error = true;
-                  setIsOptionError(true);
-                }
-                if (!title) {
-                  error = true;
-                  setIsBetError(true);
-                }
-                if (!amount) {
-                  error = true;
-                  setIsAmountError(true);
-                }
-                if (!addedOptions.length) {
-                  error = true;
-                  setIsAddedOptionError(true);
-                }
-
-                if (error) {
-                  return;
-                }
-                onAddBet();
-              }}
+              onClick={handleClickSave}
             >
               Save
             </Button>

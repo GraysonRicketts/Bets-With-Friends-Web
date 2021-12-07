@@ -1,10 +1,6 @@
 import {
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Paper,
-  Fab,
   Container
 } from '@mui/material';
 import React from 'react';

@@ -14,11 +14,14 @@ import { useAuth } from 'src/app/auth';
 import { useState } from 'react';
 import { Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
-import { Bet } from 'src/api/bet';
+import { addWager as addWagerApi, Bet } from 'src/api/bet';
+import { useMutation, useQueryClient } from 'react-query';
+import { GroupWithBet } from '../../../../api/group';
+import { GROUP_KEY } from '..';
+import { LoadingButton } from '@mui/lab';
 
 interface Props {
   bet: Bet;
-  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -32,7 +35,7 @@ const optionButtonStyle = {
   marginRight: '0.5em',
 };
 
-export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
+export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
   const auth = useAuth();
   const [modalProgress, setModalProgress] = useState<ModalProgress>(
     ModalProgress.Edit,
@@ -74,6 +77,29 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
       return;
     }
   };
+
+  const queryClient = useQueryClient();
+  const { isLoading, mutate: addWager } = useMutation(
+    () => {
+      return addWagerApi({
+        betId: bet.id,
+        optionId: wagerOption?.id || '',
+        amount: betInput
+      });
+    },
+    {
+      onSuccess: (newWager) => {
+        queryClient.setQueryData<GroupWithBet | undefined>([GROUP_KEY, bet.groupId], (og) => {
+          og?.bets.find(b => b.id === bet.id)?.wagers.push(newWager);
+          return og;
+        });
+
+        setIsWagerUnplaced(false);
+        setIsWagerConfirmOpen(false);
+        handleClose();
+      },
+    },
+  );
 
   const EditPage = (
     <>
@@ -216,9 +242,13 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
     </>
   );
 
+  const handleAddWager = () => {
+    addWager();
+  }
+
   return (
     <>
-      <Modal open={isOpen} onClose={handleClose}>
+      <Modal open onClose={handleClose}>
         <Box sx={modalStyle}>
           {modalProgress === ModalProgress.Edit
             ? EditPage
@@ -241,25 +271,23 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             Are you sure you want to make this wager?
           </Typography>
 
-          <Button
+          <LoadingButton
             variant="outlined"
-            onClick={() => {
-              setIsWagerUnplaced(false);
-              setIsWagerConfirmOpen(false);
-              handleClose();
-            }}
+            onClick={handleAddWager}
             sx={optionButtonStyle}
+            loading={isLoading}
           >
             Yes
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             variant="outlined"
             onClick={() => {
               setIsWagerConfirmOpen(false);
             }}
+            loading={isLoading}
           >
             No
-          </Button>
+          </LoadingButton>
         </Box>
       </Modal>
       <Modal
@@ -276,7 +304,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             This cannot be undone.
           </Typography>
 
-          <Button
+          <LoadingButton
             variant="outlined"
             sx={{
               backgroundColor: 'error.main',
@@ -288,15 +316,15 @@ export const EditBetModal: React.FC<Props> = ({ bet, isOpen, onClose }) => {
             }}
           >
             Yes
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             variant="outlined"
             onClick={() => {
               setIsConfirmDelete(false);
             }}
           >
             No
-          </Button>
+          </LoadingButton>
         </Box>
       </Modal>
     </>

@@ -1,6 +1,6 @@
 import { IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
@@ -145,9 +145,8 @@ export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
           }}
         />
       )}
-      {editBet && (
+      {editBet && isEditModalOpen && (
         <EditBetModal
-          isOpen={isEditModalOpen}
           bet={editBet}
           onClose={() => {
             setIsEditModalOpen(false);

@@ -1,18 +1,18 @@
 import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material';
-import React, { createContext, ReactElement, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
-import { getGroupWithBet, GroupWithBet } from 'src/api/group';
+import { getGroupWithBet } from 'src/api/group';
 import { CategorizedBets } from './CategorizedBets';
 import { PlacedBets } from './PlacedBets';
 import { ScoreScreen } from './ScoreScreen';
 
-interface Tab {
+interface LabelValue {
   label: string;
   value: string;
 }
 
-const tabs: Tab[] = [
+const tabs: LabelValue[] = [
   { value: 'bets', label: 'Bets'},
   {
     label: 'Categories',

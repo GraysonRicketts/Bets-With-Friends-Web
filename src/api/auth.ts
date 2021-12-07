@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { AuthTokens } from "../app/auth/token.provider";
 import { httpInstance  } from "./http";
 
 interface LoginRes {

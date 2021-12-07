@@ -18,7 +18,7 @@ import { LoadingButton } from '@mui/lab';
 export const PendingRequests = () => {
   const queryClient = useQueryClient()
   const { data: reqs, isLoading: isReqLoading } = useQuery(REQUESTS_KEY, getFriendReqs);
-  const { data, isLoading: isAcceptLoading, mutate: acceptFriend } = useMutation(ACCEPT_KEY, acceptFriendReq, {
+  const { isLoading: isAcceptLoading, mutate: acceptFriend } = useMutation(ACCEPT_KEY, acceptFriendReq, {
     onSuccess: (_, requestId) => {
       // Removes the friend from the pending requests list
       const filteredTo = reqs?.to.filter(r => r.id !== requestId);

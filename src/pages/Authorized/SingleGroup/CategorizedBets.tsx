@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
 import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
-import { AddBetModal } from './modals/AddBetModal';
 import { Bet, Category } from 'src/api/bet';
 import { GroupWithBet } from 'src/api/group';
 import { useAuth } from 'src/app/auth';
+import { AddBetModal } from './modals/AddBetModal';
 
 interface GroupedBets {
   category: Category | undefined;
@@ -49,8 +49,9 @@ function getWagerStyle(bet: Bet, userId: string) {
   } as const;
 }
 
-
-export const CategorizedBets: React.FC<{ group: GroupWithBet}> = ({ group }) => {
+export const CategorizedBets: React.FC<{ group: GroupWithBet }> = ({
+  group,
+}) => {
   const categorizedBets = groupByCategory([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -90,27 +91,23 @@ export const CategorizedBets: React.FC<{ group: GroupWithBet}> = ({ group }) => 
           </Box>
         );
       })}
-      {editBet && (
+      {editBet && isEditModalOpen && (
         <EditBetModal
-          isOpen={isEditModalOpen}
           bet={editBet}
           onClose={() => {
             setIsEditModalOpen(false);
           }}
         />
       )}
-      {/* <AddBetModal
-        isOpen={isAddModalOpen}
-        onClose={() => {
-          setIsAddModalOpen(false);
-        }}
-        categories={bets
-          .map((b) => b.category)
-          .filter((c: Category | undefined): c is Category => {
-            return !!c;
-          })
-          .filter((v, i, pv) => pv.indexOf(v) === i)}
-      /> */}
+      {isAddModalOpen && (
+        <AddBetModal
+          onClose={() => {
+            setIsAddModalOpen(false);
+          }}
+          groupId={group.id}
+          categories={group.categories}
+        />
+      )}
     </>
   );
 };
