@@ -12,15 +12,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { useAuth } from 'src/app/auth';
 import { useState } from 'react';
-import { Option } from '../../../../interfaces';
 import { modalStyle } from './modalStyle';
 import {
   addWager as addWagerApi,
   closeBet as closeBetApi,
+  deleteBet as deleteBetApi,
   Bet,
+  Option,
 } from 'src/api/bet';
 import { useMutation, useQueryClient } from 'react-query';
-import { GroupWithBet } from '../../../../api/group';
+import { GroupWithBet } from 'src/api/group';
 import { GROUP_KEY } from '..';
 import { LoadingButton } from '@mui/lab';
 
@@ -119,6 +120,38 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             }
 
             og.bets[index] = newBet;
+            return og;
+          },
+        );
+        onClose();
+      },
+    },
+  );
+
+  const handleDelete = () => {
+    deleteBet();
+  };
+  const { isLoading: isDeleting, mutate: deleteBet } = useMutation(
+    () => {
+      return deleteBetApi(bet.id);
+    },
+    {
+      onSuccess: () => {
+        queryClient.setQueryData<GroupWithBet | undefined>(
+          [GROUP_KEY, bet.groupId],
+          (og) => {
+            if (!og) {
+              console.error('This should never happen');
+              return;
+            }
+
+            const index = og.bets.findIndex((b) => b.id === bet.id);
+            if (!index) {
+              console.error('This should never happen');
+              return;
+            }
+            
+            og.bets.splice(index, 1);
             return og;
           },
         );
@@ -266,16 +299,17 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
         Final outcome - {bet.title} - {selectedOutcome?.name}
       </Typography>
 
-      <Button
+      <LoadingButton
         variant="outlined"
         sx={optionButtonStyle}
         onClick={() => {
           closeBet();
         }}
+        loading={isClosingBet}
       >
         Yes
-      </Button>
-      <Button variant="outlined">No</Button>
+      </LoadingButton>
+      <LoadingButton variant="outlined" loading={isClosingBet}>No</LoadingButton>
     </>
   );
 
@@ -348,10 +382,8 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
               color: 'error.contrastText',
               marginRight: '1em',
             }}
-            onClick={() => {
-              setIsConfirmDelete(false);
-            }}
-            loading={isClosingBet}
+            onClick={handleDelete}
+            loading={isDeleting}
           >
             Yes
           </LoadingButton>
@@ -360,7 +392,7 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
             onClick={() => {
               setIsConfirmDelete(false);
             }}
-            loading={isClosingBet}
+            loading={isDeleting}
           >
             No
           </LoadingButton>

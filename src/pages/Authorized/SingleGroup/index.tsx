@@ -49,7 +49,7 @@ export const Group: React.FC = () => {
             aria-label="group nav tab"
           >
             {tabs.map((t) => (
-              <Tab value={t.value} label={t.label} />
+              <Tab value={t.value} label={t.label} key={`tab_${t.value}`} />
             ))}
           </Tabs>
 

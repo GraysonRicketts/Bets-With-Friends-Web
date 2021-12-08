@@ -120,6 +120,7 @@ export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
           ?.bets.map((b) => {
             return (
               <ButtonRow
+              key={`gb_${b.id}`}
                 onClick={() => {
                   setViewOnlyBet(b);
                   setIsViewOnlyModalOpen(true);

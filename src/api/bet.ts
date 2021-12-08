@@ -1,20 +1,25 @@
 import { AxiosResponse } from 'axios';
 import { httpInstance } from './http';
 
-interface Wager 
-  {
+export interface Wager {
+  id: string;
+  amount: number;
+  option: {
     id: string;
-    amount: number;
-    option: {
-      id: string;
-      name: string;
-    };
-    user: {
-      id: string;
-      displayName: string;
-      version: number;
-    };
-  }
+    name: string;
+  };
+  user: {
+    id: string;
+    displayName: string;
+    version: number;
+  };
+}
+
+export interface Option {
+  id: string;
+  name: string;
+  isFinalOption: boolean;
+}
 
 export interface Bet {
   title: string;
@@ -23,11 +28,7 @@ export interface Bet {
     name: string;
   } | null;
   wagers: Wager[];
-  options: {
-    id: string;
-    name: string;
-    isFinalOption: boolean;
-  }[];
+  options: Option[];
   closedAt: Date | null;
   closedBy: {
     id: string;
@@ -61,9 +62,9 @@ export const createBet = async (dto: CreateBetDTO) => {
 };
 
 interface AddWagerDto {
-    betId: string;
-    optionId: string;
-    amount: number;
+  betId: string;
+  optionId: string;
+  amount: number;
 }
 
 export const addWager = async (dto: AddWagerDto) => {
@@ -73,7 +74,7 @@ export const addWager = async (dto: AddWagerDto) => {
   );
 
   return res.data;
-}
+};
 
 interface FinalizeBetDto {
   betId: string;
@@ -86,4 +87,10 @@ export const closeBet = async (dto: FinalizeBetDto) => {
   );
 
   return res.data;
-}
+};
+
+export const deleteBet = async (id: string) => {
+  const res = await httpInstance.delete<AxiosResponse>(`bet/${id}`);
+
+  return res.data;
+};
