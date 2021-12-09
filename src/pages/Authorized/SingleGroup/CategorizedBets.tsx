@@ -1,13 +1,11 @@
-import { IconButton, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
-import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { Bet, Category } from 'src/api/bet';
 import { GroupWithBet } from 'src/api/group';
 import { useAuth } from 'src/app/auth';
-import { AddBetModal } from './modals/AddBetModal';
 
 interface GroupedBets {
   category: Category | undefined;
@@ -52,9 +50,8 @@ function getWagerStyle(bet: Bet, userId: string) {
 export const CategorizedBets: React.FC<{ group: GroupWithBet }> = ({
   group,
 }) => {
-  const categorizedBets = groupByCategory([]);
+  const categorizedBets = groupByCategory(group.bets);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>(undefined);
   const auth = useAuth();
 
@@ -79,15 +76,6 @@ export const CategorizedBets: React.FC<{ group: GroupWithBet }> = ({
                 </ButtonRow>
               );
             })}
-
-            <IconButton
-              aria-label="add bet"
-              onClick={() => {
-                setIsAddModalOpen(true);
-              }}
-            >
-              <AddIcon />
-            </IconButton>
           </Box>
         );
       })}
@@ -97,15 +85,6 @@ export const CategorizedBets: React.FC<{ group: GroupWithBet }> = ({
           onClose={() => {
             setIsEditModalOpen(false);
           }}
-        />
-      )}
-      {isAddModalOpen && (
-        <AddBetModal
-          onClose={() => {
-            setIsAddModalOpen(false);
-          }}
-          groupId={group.id}
-          categories={group.categories}
         />
       )}
     </>

@@ -1,10 +1,19 @@
-import { Box, CircularProgress, Tab, Tabs, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Fab,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 import { getGroupWithBet } from 'src/api/group';
 import { CategorizedBets } from './CategorizedBets';
+import { AddBetModal } from './modals/AddBetModal';
 import { PlacedBets } from './PlacedBets';
+import AddIcon from '@mui/icons-material/Add';
 import { ScoreScreen } from './ScoreScreen';
 
 interface LabelValue {
@@ -13,18 +22,19 @@ interface LabelValue {
 }
 
 const tabs: LabelValue[] = [
-  { value: 'bets', label: 'Bets'},
+  { value: 'bets', label: 'Bets' },
   {
     label: 'Categories',
     value: 'categories',
   },
-  { label: 'Score', value: 'score'},
+  { label: 'Score', value: 'score' },
 ];
 
 export const Group: React.FC = () => {
   const { id } = useParams();
 
   const [tab, setTab] = useState(tabs[0].value);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const { isLoading, data: group } = useQuery([GROUP_KEY, id], () =>
     getGroupWithBet(id || ''),
@@ -59,10 +69,37 @@ export const Group: React.FC = () => {
               marginTop: '1em',
             }}
           >
-              {tab === 'bets' && <PlacedBets group={group} />}
-              {tab === 'categories' && <CategorizedBets group={group} />}
-              {tab === 'score' && <ScoreScreen group={group} />}
+            {tab === 'bets' && <PlacedBets group={group} />}
+            {tab === 'categories' && <CategorizedBets group={group} />}
+            {tab === 'score' && <ScoreScreen group={group} />}
+
+            <Fab
+              aria-label="add bet"
+              onClick={() => {
+                setIsAddModalOpen(true);
+              }}
+              size="large"
+              color="primary"
+              sx={{
+                position: 'fixed',
+                top: 'auto',
+                bottom: '5em',
+                left: 'auto',
+                right: '1em',
+              }}
+            >
+              <AddIcon />
+            </Fab>
           </Box>
+          {isAddModalOpen && (
+            <AddBetModal
+              onClose={() => {
+                setIsAddModalOpen(false);
+              }}
+              groupId={group.id}
+              categories={group.categories}
+            />
+          )}
         </>
       )}
       {isLoading && <CircularProgress />}

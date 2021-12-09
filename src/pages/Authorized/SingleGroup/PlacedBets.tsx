@@ -1,11 +1,9 @@
-import { IconButton, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { ButtonRow } from 'src/components/ButtonRow';
-import AddIcon from '@mui/icons-material/Add';
 import { EditBetModal } from './modals/EditBetModal';
 import { useAuth } from 'src/app/auth';
-import { AddBetModal } from './modals/AddBetModal';
 import { ViewOnlyModal } from './modals/ViewOnlyModal';
 import { Bet } from 'src/api/bet';
 import { GroupWithBet } from 'src/api/group';
@@ -41,7 +39,6 @@ function groupByPlacement(bets: Bet[], userId: string): GroupedBets[] {
 export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
   const auth = useAuth();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editBet, setEditBet] = useState<Bet | undefined>();
   const [isViewOnlyModalOpen, setIsViewOnlyModalOpen] = useState(false);
   const [viewOnlyBet, setViewOnlyBet] = useState<Bet | undefined>();
@@ -73,15 +70,6 @@ export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
               </ButtonRow>
             );
           })}
-
-        <IconButton
-          aria-label="add"
-          onClick={() => {
-            setIsAddModalOpen(true);
-          }}
-        >
-          <AddIcon />
-        </IconButton>
       </Box>
 
       <Box sx={{ marginBottom: '3em' }}>
@@ -101,15 +89,6 @@ export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
               </ButtonRow>
             );
           })}
-
-        <IconButton
-          aria-label="add"
-          onClick={() => {
-            setIsAddModalOpen(true);
-          }}
-        >
-          <AddIcon />
-        </IconButton>
       </Box>
 
       <Box>
@@ -154,13 +133,6 @@ export const PlacedBets: React.FC<{ group: GroupWithBet}> = ({group}) => {
           }}
         />
       )}
-      {isAddModalOpen && <AddBetModal
-        onClose={() => {
-          setIsAddModalOpen(false);
-        }}
-        categories={group.categories}
-        groupId={group.id}
-      />}
     </>
   );
 };
