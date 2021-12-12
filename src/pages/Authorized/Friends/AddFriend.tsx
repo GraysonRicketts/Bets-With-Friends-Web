@@ -6,7 +6,7 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
-  Input
+  Input,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useMutation } from 'react-query';
@@ -14,39 +14,45 @@ import { addFriend as addFriendApiCall } from '../../../api/friend';
 import { AxiosError } from 'axios';
 
 interface State {
-  email: string,
-  errMsg: string
+  email: string;
+  errMsg: string;
 }
 
 export const AddFriend: React.FC = () => {
-  const [{ email, errMsg}, setState] = useState<State>({
+  const [{ email, errMsg }, setState] = useState<State>({
     email: '',
-    errMsg: ''
+    errMsg: '',
   });
-  const { isLoading, mutate: addFriend  } = useMutation(() => addFriendApiCall(email), {
+  const { isLoading, mutate: addFriend } = useMutation(
+    () => addFriendApiCall(email),
+    {
       onSuccess: () => {
-          setState({errMsg: '', email: ''});
+        setState({ errMsg: '', email: '' });
       },
       onError: (e) => {
         const ae = e as AxiosError;
         if (ae.isAxiosError) {
-          setState({ errMsg: ae.response?.data.message, email })
+          setState({ errMsg: ae.response?.data.message, email });
         } else if (e instanceof Error) {
-          setState({ errMsg: e.message, email})
+          setState({ errMsg: e.message, email });
         } else {
-          console.error(e)
-          setState({ errMsg: 'Something went wrong. Please, try again.', email})
+          console.error(e);
+          setState({
+            errMsg: 'Something went wrong. Please, try again.',
+            email,
+          });
         }
-      }
-  });
-  
+      },
+    },
+  );
+
   const handleAddFriend = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     addFriend();
   };
-  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setState({errMsg: '', email: event.currentTarget.value})
+    setState({ errMsg: '', email: event.currentTarget.value });
   };
 
   return (
@@ -54,10 +60,16 @@ export const AddFriend: React.FC = () => {
       <Box
         component="form"
         onSubmit={handleAddFriend}
-        sx={{ display: 'flex', flexDirection: 'row',
-        alignItems: 'center', }}
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
       >
-        <Fab disabled={isLoading} color="primary" variant="extended" type="submit" size="small" sx={{mr: 1}}>
+        <Fab
+          disabled={isLoading}
+          color="primary"
+          variant="extended"
+          type="submit"
+          size="large"
+          sx={{ mr: 1 }}
+        >
           <Add />
           Add friend
         </Fab>
@@ -72,7 +84,9 @@ export const AddFriend: React.FC = () => {
             error={!!errMsg}
             autoFocus
           />
-          {!!errMsg && <FormHelperText id="request-failed">{errMsg}</FormHelperText>}
+          {!!errMsg && (
+            <FormHelperText id="request-failed">{errMsg}</FormHelperText>
+          )}
         </FormControl>
       </Box>
     </Container>
