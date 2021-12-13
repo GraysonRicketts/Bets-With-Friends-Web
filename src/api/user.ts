@@ -4,3 +4,8 @@ export type User = {
     displayName: string;
     score: string;
 }
+
+export interface SimpleUser {
+    id: string;
+    name: string;
+}

@@ -1,12 +1,12 @@
-import { User } from '../../interfaces';
+import { SimpleUser } from 'src/api/user';
 
 
 const USER_KEY = 'USER';
 export const createUserProvider = () => {
   const storedUser = localStorage.getItem(USER_KEY);
-  let _user: User | null = storedUser && JSON.parse(storedUser);
+  let _user: SimpleUser | null = storedUser && JSON.parse(storedUser);
 
-  const setUser = (user: User | null) => {
+  const setUser = (user: SimpleUser | null) => {
     if (user) {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     } else {

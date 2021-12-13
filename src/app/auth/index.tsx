@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { httpInstance } from '../../api/http';
-import { User } from '../../interfaces';
+import { SimpleUser } from 'src/api/user';
 import { createTokenProvider } from './token.provider';
 import { createUserProvider } from './user.provider';
 
 
 
 export interface AuthContext {
-  user: User | null;
+  user: SimpleUser | null;
   signIn: (id: string, displayName: string, token: string) => void;
   signOut: () => void;
 }
@@ -37,7 +37,7 @@ function setBearerToken(token:string ): void {
 function useProvideAuth(): AuthContext {
   const userProvider = createUserProvider();
   const storedUser = userProvider.getUser();
-  const [state, setState] = useState<{ user: User | null }>({ user: storedUser });
+  const [state, setState] = useState<{ user: SimpleUser | null }>({ user: storedUser });
   
   const tokenProvider = createTokenProvider();
   const savedToken = tokenProvider.getToken();

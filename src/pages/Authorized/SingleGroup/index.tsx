@@ -28,7 +28,7 @@ const tabs: LabelValue[] = [
     label: 'Categories',
     value: 'categories',
   },
-  { label: 'Score', value: 'score' },
+  // { label: 'Score', value: 'score' },
   { label: 'Members', value: 'members' },
 ];
 
@@ -73,7 +73,7 @@ export const Group: React.FC = () => {
           >
             {tab === 'bets' && <PlacedBets group={group} />}
             {tab === 'categories' && <CategorizedBets group={group} />}
-            {tab === 'score' && <ScoreScreen group={group} />}
+            {/* {tab === 'score' && <ScoreScreen group={group} />} */}
             {tab === 'members' && <Members group={group} />}
 
             {(tab ==='bets' || tab === 'categories') && (<Fab
