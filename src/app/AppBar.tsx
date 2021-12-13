@@ -1,18 +1,23 @@
 import {
-  Breadcrumbs,
+  Typography,
+  Box,
   IconButton,
   Link,
   LinkProps,
   Menu,
   MenuItem,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { AppBar as MaterialAppBar } from '@mui/material';
-import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from './auth';
-import { People, Menu as MenuIcon } from '@mui/icons-material';
+import {
+  People,
+  Menu as MenuIcon,
+  Home as HomeIcon,
+  ArrowBackIosNew
+} from '@mui/icons-material';
 
 interface LinkRouterProps extends LinkProps {
   to: string;
@@ -23,65 +28,66 @@ const LinkRouter = (props: LinkRouterProps) => (
 );
 
 export const AppBar: React.FC = () => {
-  const [anchor, setAnchor] = useState<null | HTMLElement>(null); 
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const location = useLocation();
-
   const handleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchor(event.currentTarget)
+    setAnchor(event.currentTarget);
     setIsProfileOpen(true);
   };
 
   const handleClose = () => {
-    setAnchor(null)
+    setAnchor(null);
     setIsProfileOpen(false);
-  }
+  };
 
   const handleLogout = () => {
     handleClose();
     auth.signOut();
-    navigate('/login'); 
+    navigate('/login');
   };
 
   const handleProfile = () => {
     handleClose();
-  }
+  };
 
-  const handleFriends = () => { 
-    navigate('/friends')
-  }
+  const handleFriends = () => {
+    navigate('/friends');
+  };
 
   return (
     <MaterialAppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
       <Toolbar>
-        <Breadcrumbs
+        <Box
           aria-label="breadcrumb"
           component="div"
-          sx={{ flexGrow: 1 }}
+          sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', flexDirection: 'row' }}
         >
-          <LinkRouter underline="hover" color="white" variant="h6" to="/">
-            Home
-          </LinkRouter>
+          <IconButton aria-label="back" onClick={() => {
+             navigate(-1);
+          }}>
+            <ArrowBackIosNew sx={{color: 'white'}} fontSize="medium" />
+          </IconButton>
 
-          {location.pathname.includes('group') && (
-            <Typography color="white" variant="h6">
-              Groups
-            </Typography>
-          )}
-        </Breadcrumbs>
-        <div>
+          <Box>
+            <LinkRouter underline="hover" color="white" variant="h6" to="/">
+              <HomeIcon fontSize="medium"/>
+            </LinkRouter>
+          </Box>
+        </Box>
+        <Box>
+          <Typography>{}</Typography>
           <IconButton
-          size="large"
+            size="large"
             aria-label="friends of current user"
             aria-controls="friend-appbar"
             aria-haspopup="true"
             onClick={handleFriends}
             color="inherit"
-            >
-              <People />
+          >
+            <People />
           </IconButton>
           <IconButton
             size="large"
@@ -111,7 +117,7 @@ export const AppBar: React.FC = () => {
             <MenuItem onClick={handleProfile}>Profile</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
-        </div>
+        </Box>
       </Toolbar>
     </MaterialAppBar>
   );
