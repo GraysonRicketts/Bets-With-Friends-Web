@@ -7,6 +7,7 @@ import {
   Menu,
   MenuItem,
   Toolbar,
+  CircularProgress,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { AppBar as MaterialAppBar } from '@mui/material';
@@ -16,8 +17,10 @@ import {
   People,
   Menu as MenuIcon,
   Home as HomeIcon,
-  ArrowBackIosNew
+  ArrowBackIosNew,
 } from '@mui/icons-material';
+import { useQuery } from 'react-query';
+import { getScore } from 'src/api/score';
 
 interface LinkRouterProps extends LinkProps {
   to: string;
@@ -32,6 +35,10 @@ export const AppBar: React.FC = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
+
+  const { isLoading, data: score } = useQuery('get_score', getScore, {
+    staleTime: 30000,
+  });
 
   const handleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchor(event.currentTarget);
@@ -59,26 +66,49 @@ export const AppBar: React.FC = () => {
 
   return (
     <MaterialAppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
-      <Toolbar>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box
           aria-label="breadcrumb"
           component="div"
-          sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', flexDirection: 'row' }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
         >
-          <IconButton aria-label="back" onClick={() => {
-             navigate(-1);
-          }}>
-            <ArrowBackIosNew sx={{color: 'white'}} fontSize="medium" />
+          <IconButton
+            aria-label="back"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIosNew sx={{ color: 'white' }} fontSize="medium" />
           </IconButton>
 
           <Box>
             <LinkRouter underline="hover" color="white" variant="h6" to="/">
-              <HomeIcon fontSize="medium"/>
+              <HomeIcon fontSize="medium" />
             </LinkRouter>
           </Box>
         </Box>
+        <Box
+          component="div"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
+        >
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              <Typography variant="body2">Score:</Typography>
+              <Typography variant="h5">{score}</Typography>
+            </>
+          )}
+        </Box>
         <Box>
-          <Typography>{}</Typography>
           <IconButton
             size="large"
             aria-label="friends of current user"

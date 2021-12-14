@@ -14,7 +14,6 @@ import { CategorizedBets } from './CategorizedBets';
 import { AddBetModal } from './modals/AddBetModal';
 import { PlacedBets } from './PlacedBets';
 import AddIcon from '@mui/icons-material/Add';
-import { ScoreScreen } from './ScoreScreen';
 import { Members } from './Members';
 
 interface LabelValue {
@@ -73,7 +72,6 @@ export const Group: React.FC = () => {
           >
             {tab === 'bets' && <PlacedBets group={group} />}
             {tab === 'categories' && <CategorizedBets group={group} />}
-            {/* {tab === 'score' && <ScoreScreen group={group} />} */}
             {tab === 'members' && <Members group={group} />}
 
             {(tab ==='bets' || tab === 'categories') && (<Fab

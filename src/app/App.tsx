@@ -11,7 +11,6 @@ import { Groups } from '../pages/Authorized/Groups';
 import { Login } from '../pages/UnAuthorized/Login';
 import { httpInstance } from '../api/http';
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
-import { ReactQueryDevtools } from 'react-query/devtools'
 import { Friends } from '../pages/Authorized/Friends';
 
 const theme = createTheme();
@@ -71,7 +70,6 @@ function App() {
             </Routes>
           </Container>
         </ProvideAuth>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
       </ErrorBoundary>
     </ThemeProvider>
