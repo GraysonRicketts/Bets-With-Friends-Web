@@ -11,12 +11,13 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import { useMutation, useQuery } from 'react-query';
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
 import React, { useState } from 'react';
-import { getFriends } from '../../../api/friend';
-import { createGroup as createGroupApi } from '../../../api/group';
-import { Modal } from '../../../components/Modal';
+import { getFriends } from 'src/api/friend';
+import { createGroup as createGroupApi } from 'src/api/group';
+import { Modal } from 'src/components/Modal';
 import { AxiosError } from 'axios';
+import { GROUPS_KEY } from '.';
 
 interface Props {
   onClose: () => void;
@@ -33,10 +34,13 @@ export const CreateGroupModal: React.FC<Props> = ({ onClose }) => {
     groupName: '',
     selectedFriends: [],
   });
+
+  const queryClient = useQueryClient();
   const { isLoading: isCreating, mutate: createGroup } = useMutation(
     () => createGroupApi({ name: groupName, members: selectedFriends }),
     {
       onSuccess: () => {
+        queryClient.refetchQueries([GROUPS_KEY]);
         onClose();
       },
       onError: (e) => {
@@ -46,7 +50,7 @@ export const CreateGroupModal: React.FC<Props> = ({ onClose }) => {
         } else {
           console.error(e);
         }
-      },
+      }
     },
   );
 

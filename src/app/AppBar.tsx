@@ -30,13 +30,14 @@ const LinkRouter = (props: LinkRouterProps) => (
   <Link {...props} component={RouterLink as any} />
 );
 
+export const GET_SCORE = 'get_score'
 export const AppBar: React.FC = () => {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const { isLoading, data: score } = useQuery('get_score', getScore, {
+  const { isLoading, data: score } = useQuery(GET_SCORE, getScore, {
     staleTime: 30000,
   });
 
@@ -103,7 +104,7 @@ export const AppBar: React.FC = () => {
             <CircularProgress />
           ) : (
             <>
-              <Typography variant="body2">Score:</Typography>
+              <Typography variant="body2" sx={{mr: 0.5}}>Score:</Typography>
               <Typography variant="h5">{score}</Typography>
             </>
           )}

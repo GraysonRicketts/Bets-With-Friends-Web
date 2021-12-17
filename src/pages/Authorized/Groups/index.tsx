@@ -61,4 +61,4 @@ export const Groups: React.FC = () => {
   );
 };
 
-const GROUPS_KEY = `${Groups.name}_GROUPS`;
+export const GROUPS_KEY = `${Groups.name}_GROUPS`;

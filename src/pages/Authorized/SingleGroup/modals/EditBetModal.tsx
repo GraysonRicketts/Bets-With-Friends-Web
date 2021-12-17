@@ -24,6 +24,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { GroupWithBet } from 'src/api/group';
 import { GROUP_KEY } from '..';
 import { LoadingButton } from '@mui/lab';
+import { GET_SCORE } from 'src/app/AppBar';
 
 interface Props {
   bet: Bet;
@@ -124,7 +125,9 @@ export const EditBetModal: React.FC<Props> = ({ bet, onClose }) => {
           },
         );
         onClose();
+        queryClient.refetchQueries([GET_SCORE])
       },
+      
     },
   );
 
