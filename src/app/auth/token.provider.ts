@@ -2,16 +2,22 @@ export interface AuthTokens {
   accessToken: string;
 } 
 
+export interface TokenProvider {
+  getToken: () => string | null,
+    isLoggedIn: () => boolean,
+    setToken: (token: AuthTokens | null) => void,
+}
+
 const TOKEN_KEY = 'REACT_TOKEN_AUTH';
-export const createTokenProvider = () => {
+export const createTokenProvider = (): TokenProvider => {
   const storedToken = localStorage.getItem(TOKEN_KEY);
   let _token: AuthTokens | null = storedToken && JSON.parse(storedToken);
 
   const setToken = (token: AuthTokens | null) => {
     if (token) {
-      localStorage.setItem('REACT_TOKEN_AUTH', JSON.stringify(token));
+      localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
     } else {
-      localStorage.removeItem('REACT_TOKEN_AUTH');
+      localStorage.removeItem(TOKEN_KEY);
     }
     _token = token;
   };

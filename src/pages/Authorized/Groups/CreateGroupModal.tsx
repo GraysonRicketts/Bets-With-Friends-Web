@@ -11,7 +11,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import React, { useState } from 'react';
 import { getFriends } from 'src/api/friend';
 import { createGroup as createGroupApi } from 'src/api/group';

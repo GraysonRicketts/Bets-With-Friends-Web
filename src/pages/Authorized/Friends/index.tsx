@@ -1,11 +1,10 @@
 import {
   Typography,
-  Paper,
   Container
 } from '@mui/material';
 import React from 'react';
 import { AddFriend } from './AddFriend';
-import { PendingRequests } from './PendingRequests';
+import { FriendsList } from './PendingRequests';
 
 export const Friends: React.FC = () => {
   
@@ -17,12 +16,7 @@ export const Friends: React.FC = () => {
       </Typography>
 
       <AddFriend />
-
-      <Paper>
-      {/* List of friends */}
-      </Paper>
-
-      <PendingRequests />
+      <FriendsList />
     </Container>
   );
 };

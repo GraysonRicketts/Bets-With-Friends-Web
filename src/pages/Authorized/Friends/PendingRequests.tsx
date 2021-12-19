@@ -10,38 +10,73 @@ import {
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { acceptFriendReq, getFriendReqs, getFriends } from '../../../api/friend';
+import {
+  acceptFriendReq,
+  getFriendReqs,
+  getFriends,
+} from '../../../api/friend';
 import { LoadingButton } from '@mui/lab';
 
+export const FriendsList = () => {
+  const queryClient = useQueryClient();
+  const { data: reqs, isLoading: isReqLoading } = useQuery(
+    REQUESTS_KEY,
+    getFriendReqs,
+  );
+  const { isLoading: isAcceptLoading, mutate: acceptFriend } = useMutation(
+    ACCEPT_KEY,
+    acceptFriendReq,
+    {
+      onSuccess: (_, requestId) => {
+        // Removes the friend from the pending requests list
+        const filteredTo = reqs?.to.filter((r) => r.id !== requestId);
+        queryClient.setQueryData(REQUESTS_KEY, { ...reqs, to: filteredTo });
+      },
+    },
+  );
 
-
-export const PendingRequests = () => {
-  const queryClient = useQueryClient()
-  const { data: reqs, isLoading: isReqLoading } = useQuery(REQUESTS_KEY, getFriendReqs);
-  const { isLoading: isAcceptLoading, mutate: acceptFriend } = useMutation(ACCEPT_KEY, acceptFriendReq, {
-    onSuccess: (_, requestId) => {
-      // Removes the friend from the pending requests list
-      const filteredTo = reqs?.to.filter(r => r.id !== requestId);
-      queryClient.setQueryData(REQUESTS_KEY, { ...reqs, to: filteredTo })
-    }
-  });
-
-  const { data: friends, isLoading: isFriendLoading } = useQuery(FRIEND_KEY, getFriends)
+  const { data: friends, isLoading: isFriendLoading } = useQuery(
+    FRIEND_KEY,
+    getFriends,
+  );
 
   const handleAccept = (requestId: string) => {
     acceptFriend(requestId);
   };
 
-  const handleDelete = () => {
-  };
+  const handleDelete = () => {};
 
   return (
     <Box>
       {isReqLoading && <CircularProgress />}
-        <List>
-          <ListSubheader>Pending requests ({reqs?.to.length})</ListSubheader>
-          {isReqLoading && <CircularProgress />}
-          {reqs && reqs.to.map((r) => {
+      <List>
+        <ListSubheader>Friends ({friends?.length})</ListSubheader>
+        {isFriendLoading && <CircularProgress />}
+        {friends &&
+          friends.map((f) => {
+            return (
+              <ListItem
+                key={`friend_${f.id}`}
+                secondaryAction={
+                  <>
+                    <Button size="small" onClick={handleDelete}>
+                      <Close />
+                    </Button>
+                  </>
+                }
+                disableGutters
+              >
+                <ListItemText primary={f.friend.displayName} />
+              </ListItem>
+            );
+          })}
+
+        <ListSubheader>
+          Received friend requests ({reqs?.to.length})
+        </ListSubheader>
+        {isReqLoading && <CircularProgress />}
+        {reqs &&
+          reqs.to.map((r) => {
             return (
               <ListItem
                 key={`to_${r.id}`}
@@ -59,7 +94,7 @@ export const PendingRequests = () => {
                   variant="contained"
                   color="success"
                   onClick={() => handleAccept(r.id)}
-                  sx={{mr: 1}}
+                  sx={{ mr: 1 }}
                   loading={isAcceptLoading}
                 >
                   Accept
@@ -74,34 +109,13 @@ export const PendingRequests = () => {
               </ListItem>
             );
           })}
-          <ListSubheader>Friends ({friends?.length})</ListSubheader>
-          {isFriendLoading && <CircularProgress />}
-          {friends && friends.map((f) => {
-            return (
-              <ListItem
-                key={`friend_${f.id}`}
-                secondaryAction={
-                  <>
-                    <Button size="small" onClick={handleDelete}>
-                      <Close />
-                    </Button>
-                  </>
-                }
-                disableGutters
-              >
-                <ListItemText
-                  primary={
-                  f.friend.displayName
-                  }
-                />
-              </ListItem>
-            );
-          })}
 
-
-          <ListSubheader>Awaiting ({reqs?.from.length})</ListSubheader>
-          {isReqLoading && <CircularProgress />}
-          {reqs && reqs.from.map((r) => {
+        <ListSubheader>
+          Sent friend requests ({reqs?.from.length})
+        </ListSubheader>
+        {isReqLoading && <CircularProgress />}
+        {reqs &&
+          reqs.from.map((r) => {
             return (
               <ListItem
                 key={`from_${r.id}`}
@@ -114,19 +128,15 @@ export const PendingRequests = () => {
                 }
                 disableGutters
               >
-                <ListItemText
-                  primary={
-                      r.userTo.email
-                  }
-                />
+                <ListItemText primary={r.userTo.email} />
               </ListItem>
             );
           })}
-        </List>
+      </List>
     </Box>
   );
 };
 
-const REQUESTS_KEY = `${PendingRequests.name}_requests`;
-const ACCEPT_KEY = `${PendingRequests.name}_accept`;
-const FRIEND_KEY = `${PendingRequests.name}_friends`;
+const REQUESTS_KEY = `${FriendsList.name}_requests`;
+const ACCEPT_KEY = `${FriendsList.name}_accept`;
+const FRIEND_KEY = `${FriendsList.name}_friends`;
