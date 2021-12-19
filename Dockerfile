@@ -9,7 +9,6 @@ RUN yarn install --prod --frozen-lockfile
 COPY . /app
 
 RUN yarn build
-
 RUN yarn global add serve
 
 CMD ["serve", "-s", "build"]
