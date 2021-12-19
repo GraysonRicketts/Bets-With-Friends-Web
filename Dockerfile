@@ -1,5 +1,5 @@
-# Stage 0, "build-stage", based on Node.js to build the frontend
-FROM node:16 as build
+# Build stage
+FROM node:16 AS build
 WORKDIR /app
 
 COPY package.json ./
@@ -10,8 +10,8 @@ COPY . /app
 
 RUN yarn build
 
-# production environment
-FROM nginx:alpine
+# Run stage
+FROM nginx:alpine AS run 
 
 COPY --from=build /app/build /usr/share/nginx/html
 
