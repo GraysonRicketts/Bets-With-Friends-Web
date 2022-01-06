@@ -149,7 +149,8 @@ export const Login: React.FC = () => {
           loading={isLoading}
         >
           Submit
-        </LoadingButton>        
+        </LoadingButton>
+        <a href="/auth/google">Sign in with Google</a>        
       </Box>
       <Link to="/create-account">
           <Typography component="h3" variant="body1" sx={{ mt: 2 }}>
