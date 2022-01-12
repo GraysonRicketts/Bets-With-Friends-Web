@@ -13,8 +13,14 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useMutation } from 'react-query';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../app/auth';
-import { login } from '../../api/auth';
+import { useAuth } from 'src/app/auth';
+import { login } from 'src/api/auth';
+
+const GOOGLE_OAUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+const clientId = '513098205800-j6pp1actb46n8ae9iaahutmiba08ubna.apps.googleusercontent.com';
+const redirectUrl = 'https://localhost:3000/google/oauth2redirect';
+
+const authLink = `${GOOGLE_OAUTH_URL}?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=email`;
 
 interface State {
   email: string;
@@ -150,13 +156,13 @@ export const Login: React.FC = () => {
         >
           Submit
         </LoadingButton>
-        <a href="/auth/google">Sign in with Google</a>        
+        <a href={authLink}>Login with Google</a>
       </Box>
       <Link to="/create-account">
-          <Typography component="h3" variant="body1" sx={{ mt: 2 }}>
-            Don't have an account? Click here to create one.
-          </Typography>
-        </Link>
+        <Typography component="h3" variant="body1" sx={{ mt: 2 }}>
+          Don't have an account? Click here to create one.
+        </Typography>
+      </Link>
     </Container>
   );
 };

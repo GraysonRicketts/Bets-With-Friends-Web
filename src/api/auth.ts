@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { httpInstance  } from "./http";
 
-interface LoginRes {
+export interface LoginRes {
     id: string;
     accessToken: string;
     displayName: string;
@@ -35,3 +35,11 @@ export async function createAccount(email: string, username: string , password: 
     return res.data;
 }
 
+interface GoogleLoginDto { accessToken: string };
+export async function loginWithGoogle(accessToken: string) {
+    const res = await httpInstance.post<GoogleLoginDto, AxiosResponse<LoginRes>>('auth/google', {
+        accessToken
+    });
+
+    return res.data;
+}

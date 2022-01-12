@@ -9,6 +9,7 @@ import { ProvideAuth, useAuth } from './auth';
 import { Group } from '../pages/Authorized/SingleGroup';
 import { Groups } from '../pages/Authorized/Groups';
 import { Login } from '../pages/UnAuthorized/Login';
+import { GoogleLogin } from '../pages/UnAuthorized/GoogleLogin';
 import { httpInstance } from '../api/http';
 import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
 import { Friends } from '../pages/Authorized/Friends';
@@ -53,20 +54,12 @@ function App() {
             <Routes>
               <Route path="create-account" element={<CreateAccount />} />
               <Route path="login" element={<Login />} />
+              <Route path="google/oauth2redirect*" element={<GoogleLogin />}/>
               <Route path="/" element={<AuthorizedApp />}>
                 <Route path="group/:id" element={<Group />}/>
                 <Route path="friends" element={<Friends />}/>
                 <Route index element={<Groups />} />
               </Route>
-
-              <Route
-                path="*"
-                element={
-                  <main style={{ padding: '1rem' }}>
-                    <p>Page not found</p>
-                  </main>
-                }
-              />
             </Routes>
           </Container>
         </ProvideAuth>
