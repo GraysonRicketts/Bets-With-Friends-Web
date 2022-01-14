@@ -1,5 +1,12 @@
 import { Container } from '@mui/material';
-import { Routes, Navigate, Route, useLocation, Outlet, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Navigate,
+  Route,
+  useLocation,
+  Outlet,
+  useNavigate,
+} from 'react-router-dom';
 import { AppBar } from './AppBar';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CreateAccount } from '../pages/UnAuthorized/CreateAccount';
@@ -11,59 +18,59 @@ import { Groups } from '../pages/Authorized/Groups';
 import { Login } from '../pages/UnAuthorized/Login';
 import { GoogleLogin } from '../pages/UnAuthorized/GoogleLogin';
 import { httpInstance } from '../api/http';
-import {ErrorBoundary, FallbackProps} from 'react-error-boundary';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Friends } from '../pages/Authorized/Friends';
 
 const theme = createTheme();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false
+      retry: false,
     },
-  }
-})
-;
-
+  },
+});
 function ErrorFallback(props: FallbackProps) {
-  const { error }= props;
+  const { error } = props;
   return (
     <div role="alert">
       <p>Something went wrong:</p>
-      <pre style={{color: 'red'}}>{error.message}</pre>
+      <pre style={{ color: 'red' }}>{error.message}</pre>
     </div>
-  )
+  );
 }
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <QueryClientProvider client={queryClient}>
-        <ProvideAuth>
-          <CssBaseline />
-          <Container
-            sx={{
-              paddingTop: '1em',
-              paddingBottom: '1em',
-              width: '100%',
-              height: '92%',
-              overflowY: 'auto'
-            }}
-            className="App"
-          >
-            <Routes>
-              <Route path="create-account" element={<CreateAccount />} />
-              <Route path="login" element={<Login />} />
-              <Route path="google/oauth2redirect*" element={<GoogleLogin />}/>
-              <Route path="/" element={<AuthorizedApp />}>
-                <Route path="group/:id" element={<Group />}/>
-                <Route path="friends" element={<Friends />}/>
-                <Route index element={<Groups />} />
-              </Route>
-            </Routes>
-          </Container>
-        </ProvideAuth>
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <ProvideAuth>
+            <CssBaseline />
+            <Container
+              sx={{
+                paddingTop: '1em',
+                paddingBottom: '1em',
+                width: '100%',
+                height: '92%',
+                overflowY: 'auto',
+              }}
+              className="App"
+            >
+              <Routes>
+                <Route path="create-account" element={<CreateAccount />} />
+                <Route path="login" element={<Login />} />
+                <Route path="google">
+                  <Route path="oauth2redirect" element={<GoogleLogin />} />
+                </Route>
+                <Route path="/" element={<AuthorizedApp />}>
+                  <Route path="group/:id" element={<Group />} />
+                  <Route path="friends" element={<Friends />} />
+                  <Route index element={<Groups />} />
+                </Route>
+              </Routes>
+            </Container>
+          </ProvideAuth>
+        </QueryClientProvider>
       </ErrorBoundary>
     </ThemeProvider>
   );
@@ -82,21 +89,23 @@ const AuthorizedApp = () => {
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const auth = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
 
-  httpInstance.interceptors.response.use((v) => v, (err) => {
-    const {status} = err.response;
+  httpInstance.interceptors.response.use(
+    (v) => v,
+    (err) => {
+      const { status } = err.response;
 
-    // If unauthorized logout and redirect to login page
-    if (status === 401) {
-      auth.signOut();
-      navigate('/login', { state: { from: location }})
-    }
-    
-    
-    return Promise.reject(err);
-  })
+      // If unauthorized logout and redirect to login page
+      if (status === 401) {
+        auth.signOut();
+        navigate('/login', { state: { from: location } });
+      }
+
+      return Promise.reject(err);
+    },
+  );
 
   if (!auth.user) {
     // Redirect them to the /login page, but save the current location they were
