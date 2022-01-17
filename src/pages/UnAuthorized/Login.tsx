@@ -15,12 +15,11 @@ import { LoadingButton } from '@mui/lab';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from 'src/app/auth';
 import { login } from 'src/api/auth';
+import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_REDIRECT_URL } from '../../config';
 
 const GOOGLE_OAUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
-const clientId = '513098205800-j6pp1actb46n8ae9iaahutmiba08ubna.apps.googleusercontent.com';
-const redirectUrl = 'https://localhost:3000/google/oauth2redirect';
 
-const authLink = `${GOOGLE_OAUTH_URL}?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=token&scope=email`;
+const authLink = `${GOOGLE_OAUTH_URL}?client_id=${GOOGLE_AUTH_CLIENT_ID}&redirect_uri=${GOOGLE_AUTH_REDIRECT_URL}&response_type=token&scope=email`;
 
 interface State {
   email: string;
