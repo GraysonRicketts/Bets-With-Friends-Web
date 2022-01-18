@@ -1,11 +1,11 @@
 export interface AuthTokens {
   accessToken: string;
-} 
+}
 
 export interface TokenProvider {
-  getToken: () => string | null,
-    isLoggedIn: () => boolean,
-    setToken: (token: AuthTokens | null) => void,
+  getToken: () => string | null;
+  isLoggedIn: () => boolean;
+  setToken: (token: AuthTokens | null) => void;
 }
 
 const TOKEN_KEY = 'REACT_TOKEN_AUTH';
@@ -40,4 +40,3 @@ export const createTokenProvider = (): TokenProvider => {
     setToken,
   };
 };
-

@@ -35,8 +35,11 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "react-scripts start --watch --debug",
-    "style": "yarn prettier --check .",
-    "style:fix": "yarn prettier --write .",
+    "format": "prettier \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:fix": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "style:fix": "npm run format:fix && npm run lint:fix",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
