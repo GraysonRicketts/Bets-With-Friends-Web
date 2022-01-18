@@ -35,7 +35,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "react-scripts start --watch --debug",
-    "format:check": "prettier \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier \"src/**/*.ts\"",
     "format:fix": "prettier --write \"src/**/*.ts\"",
     "lint:check": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
