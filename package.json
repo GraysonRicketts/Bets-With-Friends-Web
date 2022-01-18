@@ -35,10 +35,11 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "react-scripts start --watch --debug",
-    "format": "prettier \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:fix": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint:check": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "style:check": "npm run format:check && npm run lint:check",
     "style:fix": "npm run format:fix && npm run lint:fix",
     "build": "react-scripts build",
     "test": "react-scripts test",
