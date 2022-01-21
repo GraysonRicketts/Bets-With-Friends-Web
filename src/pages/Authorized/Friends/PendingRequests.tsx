@@ -44,7 +44,8 @@ export const FriendsList = () => {
     acceptFriend(requestId);
   };
 
-  const handleDelete = () => {};
+  const handleDeleteRequest = () => {};
+  const handleRemoveFriend = () => {};
 
   return (
     <Box>

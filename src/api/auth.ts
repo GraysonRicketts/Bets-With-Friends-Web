@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { httpInstance } from './http';
+import { httpInstance } from './api';
 
 export interface LoginRes {
   id: string;

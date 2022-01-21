@@ -17,7 +17,7 @@ import { Group } from '../pages/Authorized/SingleGroup';
 import { Groups } from '../pages/Authorized/Groups';
 import { Login } from '../pages/UnAuthorized/Login';
 import { GoogleLogin } from '../pages/UnAuthorized/GoogleLogin';
-import { httpInstance } from '../api/http';
+import { httpInstance } from '../api/api';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Friends } from '../pages/Authorized/Friends';
 

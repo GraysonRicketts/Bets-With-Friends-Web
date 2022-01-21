@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { httpInstance } from './http';
+import { httpInstance } from './api';
 import { User } from './user';
 
 interface AddFriendDto {
@@ -66,3 +66,5 @@ export async function getFriends() {
 
   return res.data;
 }
+
+
