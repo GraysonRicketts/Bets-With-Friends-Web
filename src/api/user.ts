@@ -1,11 +1,11 @@
 export type User = {
-    id: string;
-    email: string;
-    displayName: string;
-    score: string;
-}
+  id: string;
+  email: string;
+  displayName: string;
+  score: string;
+};
 
 export interface SimpleUser {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }

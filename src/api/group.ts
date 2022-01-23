@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { Bet, Category } from './bet';
-import { httpInstance } from './http';
+import { httpInstance } from './api';
 
 interface CreateGroupDto {
   name: string;

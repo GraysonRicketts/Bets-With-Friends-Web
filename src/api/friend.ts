@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { httpInstance } from './http';
+import { httpInstance } from './api';
 import { User } from './user';
 
 interface AddFriendDto {
@@ -63,6 +63,18 @@ export interface Friend {
 }
 export async function getFriends() {
   const res = await httpInstance.get<Friend[]>('friend');
+
+  return res.data;
+}
+
+export async function cancelFriendReq(reqId: string) {
+  const res = await httpInstance.delete(`friend/request/${reqId}`);
+
+  return res.data;
+}
+
+export async function unfriend(friendId: string) {
+  const res = await httpInstance.delete(`friend/${friendId}`);
 
   return res.data;
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { httpInstance } from '../../api/http';
+import { httpInstance } from '../../api/api';
 import { SimpleUser } from 'src/api/user';
 import { createTokenProvider } from './token.provider';
 import { createUserProvider } from './user.provider';

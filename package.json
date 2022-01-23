@@ -22,6 +22,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.4",
+    "react-ga": "^3.3.0",
     "react-query": "^3.32.1",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
@@ -35,8 +36,12 @@
   "scripts": {
     "start": "react-scripts start",
     "start:dev": "react-scripts start --watch --debug",
-    "style": "yarn prettier --check .",
-    "style:fix": "yarn prettier --write .",
+    "format:check": "prettier \"src/**/*.ts\"",
+    "format:fix": "prettier --write \"src/**/*.ts\"",
+    "lint:check": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "style:check": "npm run format:check && npm run lint:check",
+    "style:fix": "npm run format:fix && npm run lint:fix",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

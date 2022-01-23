@@ -1,4 +1,4 @@
-import { httpInstance } from './http';
+import { httpInstance } from './api';
 import { AxiosResponse } from 'axios';
 
 export const getScore = async () => {

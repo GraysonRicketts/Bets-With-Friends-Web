@@ -12,6 +12,8 @@ import { Close } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import {
   acceptFriendReq,
+  cancelFriendReq,
+  unfriend as unfriendApi,
   getFriendReqs,
   getFriends,
 } from '../../../api/friend';
@@ -19,7 +21,7 @@ import { LoadingButton } from '@mui/lab';
 
 export const FriendsList = () => {
   const queryClient = useQueryClient();
-  const { data: reqs, isLoading: isReqLoading } = useQuery(
+  const { data: reqs, isLoading: isReqLoading, refetch: refetchReqs } = useQuery(
     REQUESTS_KEY,
     getFriendReqs,
   );
@@ -35,7 +37,7 @@ export const FriendsList = () => {
     },
   );
 
-  const { data: friends, isLoading: isFriendLoading } = useQuery(
+  const { data: friends, isLoading: isFriendLoading, refetch: refetchFriends } = useQuery(
     FRIEND_KEY,
     getFriends,
   );
@@ -44,7 +46,12 @@ export const FriendsList = () => {
     acceptFriend(requestId);
   };
 
-  const handleDelete = () => {};
+  const { mutate: cancelReq } = useMutation('delete_req', cancelFriendReq, { onSuccess: () => {
+    refetchReqs();
+  }});
+  const { mutate: unfriend } = useMutation('unfriend', unfriendApi, { onSuccess: () => {
+    refetchFriends();
+  }});
 
   return (
     <Box>
@@ -59,7 +66,12 @@ export const FriendsList = () => {
                 key={`friend_${f.id}`}
                 secondaryAction={
                   <>
-                    <Button size="small" onClick={handleDelete}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        unfriend(f.id);
+                      }}
+                    >
                       <Close />
                     </Button>
                   </>
@@ -82,7 +94,12 @@ export const FriendsList = () => {
                 key={`to_${r.id}`}
                 secondaryAction={
                   <>
-                    <Button size="small" onClick={handleDelete}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        cancelReq(r.id);
+                      }}
+                    >
                       <Close />
                     </Button>
                   </>
@@ -121,7 +138,12 @@ export const FriendsList = () => {
                 key={`from_${r.id}`}
                 secondaryAction={
                   <>
-                    <Button size="small" onClick={handleDelete}>
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        unfriend(r.id);
+                      }}
+                    >
                       <Close />
                     </Button>
                   </>

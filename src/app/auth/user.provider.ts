@@ -1,6 +1,5 @@
 import { SimpleUser } from 'src/api/user';
 
-
 const USER_KEY = 'USER';
 export const createUserProvider = () => {
   const storedUser = localStorage.getItem(USER_KEY);
