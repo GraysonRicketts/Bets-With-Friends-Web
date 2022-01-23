@@ -67,4 +67,14 @@ export async function getFriends() {
   return res.data;
 }
 
+export async function cancelFriendReq(reqId: string) {
+  const res = await httpInstance.delete(`friend/request/${reqId}`);
 
+  return res.data;
+}
+
+export async function unfriend(friendId: string) {
+  const res = await httpInstance.delete(`friend/${friendId}`);
+
+  return res.data;
+}
